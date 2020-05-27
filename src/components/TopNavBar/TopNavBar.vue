@@ -1,7 +1,7 @@
 <template>
   <div id="top-nav-bar">
     <div class="icon">
-        <img src="~assets/img/blog.jpg">
+        <img src="~assets/img/blog_icon.jpg">
         <div>blog</div>
     </div>
     <nav-item :navList="navList" class="items"/>
@@ -39,12 +39,11 @@ export default {
 #top-nav-bar{
   height: 50px;
   width: 100%;
-  color: white;
   
   position: fixed;
   left: 0;
   top: 0;
-  background-color: black;
+  background-color: rgb(246,246,246);
 }
 #top-nav-bar>div{
   float: left;

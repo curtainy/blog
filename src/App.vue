@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <top-nav-bar/>
+    <div class="article"></div>
   </div>
 </template>
 
@@ -18,7 +19,9 @@ export default {
 
 <style>
 @import "assets/css/normalize.css";
-body{
-  background-color: rgb(240,243,244);
+.article{
+  height: 1000px;
+  width: 100wh;
+  background-image: url("assets/img/bg.jpg");
 }
 </style>
