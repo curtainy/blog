@@ -1,18 +1,36 @@
 <template>
   <div id="app">
     <top-nav-bar/>
-    <div class="article"></div>
+    <change-bg @changeBg="changeBg"/>
+    <div class="article" :class="{day:isDay,dark:!isDay}">
+      <keep-alive>
+        <router-view/>
+      </keep-alive>
+    </div>
   </div>
 </template>
 
 <script>
 
-import TopNavBar from 'components/TopNavBar/TopNavBar.vue'
+import TopNavBar from 'components/topNavBar/TopNavBar.vue'
+import ChangeBg  from 'components/changeBg/ChangeBg.vue'
 
 export default {
   name: 'App',
+  data(){
+    return {
+       isDay: true   //日间模式
+    }
+  },
   components: {
-    TopNavBar
+    TopNavBar,
+    ChangeBg
+  },
+  methods: {
+    //改变背景图片
+    changeBg(){
+      this.isDay = !this.isDay
+    }
   }
 }
 </script>
@@ -22,6 +40,11 @@ export default {
 .article{
   height: 1000px;
   width: 100wh;
-  background-image: url("assets/img/bg.jpg");
+}
+.day{
+  background-image: url("assets/img/daybg.jpg");
+}
+.dark{
+  background-image: url("assets/img/darkbg.jpg");
 }
 </style>

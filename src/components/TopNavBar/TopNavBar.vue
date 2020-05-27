@@ -12,8 +12,8 @@
     </div>
     <div class="admin">
       <i class="el-icon-s-custom"></i>
-      <span class="login">登录/</span>
-      <span>注册</span>
+      <span class="login" @click="loginBtn">登录/</span>
+      <span @click="registerBtn">注册</span>
     </div>
   </div>
 </template>
@@ -31,6 +31,14 @@ export default {
   },
   components: {
     NavItem
+  },
+  methods: {
+    loginBtn(){
+      this.$router.push('/login')
+    },
+    registerBtn(){
+      this.$router.push('/register')
+    }
   }
 }
 </script>
@@ -45,7 +53,7 @@ export default {
   top: 0;
   background-color: rgb(246,246,246);
 }
-#top-nav-bar>div{
+#top-nav-bar>div:not(.change-bg){
   float: left;
   height: 100%;
 }
@@ -78,5 +86,4 @@ export default {
 .login{
   margin-left: 5px;
 }
-
 </style>
