@@ -75,6 +75,7 @@ export default {
 .search{
   width: 300px;
   margin: 0 50px;
+  margin-top: 5px;
 }
 .input{
   margin-top: 5px;

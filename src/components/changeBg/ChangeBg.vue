@@ -33,7 +33,7 @@ export default {
   left: 45px;
   top: 50px;
 
-  animation: lamp 5s linear infinite;
+  animation: lamp 3s linear infinite;
   transform-origin: 50% 0%;
 }
 .lamp-cord{

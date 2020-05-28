@@ -38,8 +38,10 @@ export default {
 <style>
 @import "assets/css/normalize.css";
 .article{
-  height: 1000px;
-  width: 100wh;
+  min-height: calc(100vh - 50px);
+  width: 100%;
+
+  margin-top: 50px;
 }
 .day{
   background-image: url("assets/img/daybg.jpg");
