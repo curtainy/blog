@@ -1,19 +1,19 @@
 <template>
   <div id="login">
     <form class="login_form">
-      <div class="font">Login In</div>
+      <div class="font">Sign In</div>
       <div class="user">
         <div class="up_icon">
           <i class="el-icon-user"></i>
         </div>
-        <input type="text" placeholder="Username" class="input" v-model.lazy="username">
+        <input type="text" placeholder="username" class="input" v-model.lazy="username">
       </div>
       <span v-if="isError">账号或密码错误</span>
       <div class="pass">
         <div class="up_icon">
           <i class="el-icon-lock"></i>
         </div>
-         <input type="password" placeholder="Password" class="input" v-model.lazy="password">
+         <input type="password" placeholder="password" class="input" v-model.lazy="password">
       </div>
       <span v-if="isError">账号或密码错误</span>
       <div class="sumbit" @click="handleSumbit">登录</div>

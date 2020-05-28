@@ -16,7 +16,6 @@ export default {
   methods: {
     changeBg(){
       this.isDay = !this.isDay
-      console.log(this.isDay)
       this.$emit('changeBg')
     }
   }
