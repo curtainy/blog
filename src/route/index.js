@@ -1,8 +1,7 @@
 import vue from 'vue'
-import vueRouter from 'vue-router'
 import VueRouter from 'vue-router'
 
-vue.use(vueRouter)
+vue.use(VueRouter)
 
 const routes = [
   {
@@ -16,6 +15,10 @@ const routes = [
   {
     path: '/creation',
     component: () => import('views/creation/Creation')
+  },
+  {
+    path: '/request',
+    component: () => import('views/request/Request')
   },
   {
     path: '/member',
