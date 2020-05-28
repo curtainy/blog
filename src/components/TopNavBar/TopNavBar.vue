@@ -63,14 +63,14 @@ export default {
   width: 300px;
 }
 .icon>img{
-  margin:0 10px 0 60px;
+  margin:0 10px 0 40px;
   height: 100%;
 }
 .icon>div{
   display: inline-block;
   height: 100%;
-  line-height: 50px;
-  position: relative;
+  line-height: 50px; 
+  position: relative; 
   top: -40%;
 }
 

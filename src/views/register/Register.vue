@@ -4,7 +4,7 @@
       <div class="text">Sign up</div>
       <div class="reg_input">
         <i class="el-icon-user"></i>
-        <input type="text" placeholder="username" v-model.lazy="username">
+        <input type="text" placeholder="username" v-model.lazy="username" @focus="userChange">
       </div>
        <span v-if="isExit">该账号已存在</span>
       <div class="reg_input">
@@ -25,6 +25,10 @@
 </template>
 
 <script>
+
+import { register } from 'network/user'
+import { setToken } from 'common/storage'
+
 export default {
   data(){
     return {
@@ -43,7 +47,20 @@ export default {
         //判断密码是否符合规范
         var reg = new RegExp('^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,18}$','gi')
         if(reg.test(this.password)){
-          console.log('---')
+          //注册
+          register({username: this.username,password:this.password})
+          .then((data) => {
+            if(data.code == 1){ //账号已存在
+              this.isExit = true
+            }else if(data.code == 2){//注册失败
+              console.log('当前网络不好，请稍后重试')
+            }else{//注册成功,存储token
+              const token = data.data
+              setToken(token)
+            }
+          },(err) => {
+            console.log(err)
+          })
         }else{
           this.isStandard = true
         }
@@ -55,6 +72,9 @@ export default {
       this.isDifferent = false
       this.isStandard = false
       this.passwordCopy = ''
+    },
+    userChange(){
+      this.isExit = false
     }
   }
 }

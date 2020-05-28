@@ -29,7 +29,7 @@ export default {
   background-color: transparent;
 
   position: fixed;
-  left: 45px;
+  left: 50px;
   top: 50px;
 
   animation: lamp 3s linear infinite;
