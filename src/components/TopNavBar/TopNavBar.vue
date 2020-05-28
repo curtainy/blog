@@ -2,7 +2,7 @@
   <div id="top-nav-bar">
     <div class="icon">
         <img src="~assets/img/blog_icon.jpg">
-        <div>blog</div>
+        <div>BLOG</div>
     </div>
     <nav-item :navList="navList" class="items"/>
     <div class="demo-input-suffix search">
@@ -51,7 +51,9 @@ export default {
   position: fixed;
   left: 0;
   top: 0;
-  background-color: rgb(246,246,246);
+  background-color: rgb(52,64,70);
+
+  color: gainsboro;
 }
 #top-nav-bar>div:not(.change-bg){
   float: left;
@@ -61,7 +63,7 @@ export default {
   width: 300px;
 }
 .icon>img{
-  margin:0 20px 0 60px;
+  margin:0 10px 0 60px;
   height: 100%;
 }
 .icon>div{
@@ -75,7 +77,6 @@ export default {
 .search{
   width: 300px;
   margin: 0 50px;
-  margin-top: 5px;
 }
 .input{
   margin-top: 5px;
