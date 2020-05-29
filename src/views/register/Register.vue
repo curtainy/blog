@@ -27,7 +27,7 @@
 <script>
 
 import { register } from 'network/user'
-import { setToken } from 'common/storage'
+import { setToken } from 'network/storage'
 
 export default {
   data(){
@@ -57,6 +57,10 @@ export default {
             }else{//注册成功,存储token
               const token = data.data
               setToken(token)
+              //跳转到上一页
+              this.$router.back()
+              //导航栏变为登录状态
+              this.$bus.$emit('loaded')
             }
           },(err) => {
             console.log(err)

@@ -27,7 +27,8 @@
 
 <script>
 
-// import { login } from 'network/user'
+import { login } from 'network/user'
+import { setToken } from 'network/storage'
 
 export default {
   data(){
@@ -39,7 +40,16 @@ export default {
   },
   methods: {
     handleSumbit(){
-      //判断密码是否
+      //判断密码是否正确
+      login({username:this.username,password:this.password})
+      .then((data) => {
+        //token存入浏览器
+        setToken(data.data)
+        //跳转到上一页
+        this.$router.back()
+        //导航栏变为登录状态
+        this.$bus.$emit('loaded')
+      })
     },
     //由登录跳转到注册
     noRegister(){

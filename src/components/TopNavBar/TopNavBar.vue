@@ -16,8 +16,8 @@
       <span @click="registerBtn">注册</span>
     </div>
     <div class="load" v-if="isLoad">
-      <img :src="userId.headImg">
-      <div class="user">{{userId.username}}</div>
+      <img :src="user.headImg">
+      <div class="user">{{user.username}}</div>
       <div @click="handleQuit">退出</div>
     </div>
   </div>
@@ -27,7 +27,7 @@
 
 import NavItem from './NavItem'
 
-import { getToken, removeToken } from 'common/storage'
+import { getToken, removeToken } from 'network/storage'
 
 export default {
   data(){
@@ -35,7 +35,7 @@ export default {
       input: '',
       navList: ['博客','问答','创作','VIP会员'],
       isLoad: false,  //是否登陆
-      userId: {},
+      user: {},
     }
   },
   components: {
@@ -47,8 +47,13 @@ export default {
     console.log(token)
     if(token.username !== undefined){//当前已登录
       this.isLoad = true
-      this.userId = token
+      this.user = token
     }
+
+    this.$bus.$on('loaded',() => {
+      this.isLoad = true
+      this.user = token
+    })
   },
   methods: {
     loginBtn(){
@@ -60,6 +65,7 @@ export default {
     handleQuit(){
       removeToken()
       this.isLoad = false
+      this.user = {}
     }
   }
 }
