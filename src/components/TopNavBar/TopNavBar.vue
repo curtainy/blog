@@ -10,10 +10,15 @@
               <i slot="prefix" class="el-input__icon el-icon-search search-icon"></i>
             </el-input>
     </div>
-    <div class="admin">
+    <div class="admin" v-if="!isLoad">
       <i class="el-icon-s-custom"></i>
       <span class="login" @click="loginBtn">登录/</span>
       <span @click="registerBtn">注册</span>
+    </div>
+    <div class="load" v-if="isLoad">
+      <img :src="userId.headImg">
+      <div class="user">{{userId.username}}</div>
+      <div @click="handleQuit">退出</div>
     </div>
   </div>
 </template>
@@ -22,15 +27,28 @@
 
 import NavItem from './NavItem'
 
+import { getToken, removeToken } from 'common/storage'
+
 export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','VIP会员']
+      navList: ['博客','问答','创作','VIP会员'],
+      isLoad: false,  //是否登陆
+      userId: {},
     }
   },
   components: {
     NavItem
+  },
+  mounted(){
+    //当前是否为登录状态
+    const token = getToken()
+    console.log(token)
+    if(token.username !== undefined){//当前已登录
+      this.isLoad = true
+      this.userId = token
+    }
   },
   methods: {
     loginBtn(){
@@ -38,6 +56,10 @@ export default {
     },
     registerBtn(){
       this.$router.push('/register')
+    },
+    handleQuit(){
+      removeToken()
+      this.isLoad = false
     }
   }
 }
@@ -87,5 +109,21 @@ export default {
 }
 .login{
   margin-left: 5px;
+}
+.load img{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  margin: 5px 15px 5px 60px;
+}
+.load div{
+  height: 100%;
+  line-height: 100%;
+  display: inline-block;
+  position: relative;
+  top: -20px;
+}
+.user{
+  margin-right: 10px;
 }
 </style>

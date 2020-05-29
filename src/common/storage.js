@@ -4,9 +4,9 @@ export function setToken(token){
 }
 //获取token
 export function getToken(){
-  return JSON.parse(localStorage.getItem() || '{}')
+  return JSON.parse(localStorage.getItem('userId') || '{}')
 }
 //删除token
 export function removeToken(){
-  localStorage.removeItem()
+  localStorage.removeItem('userId')
 }
