@@ -1,5 +1,14 @@
 # blog
 
+#### 编辑博客内容使用的插件
+```
+npm install mavon-editor
+```
+#### 解析markdown使用的插件
+```
+npm install markdown
+npm install highlight.js
+```
 ## Project setup
 ```
 npm install

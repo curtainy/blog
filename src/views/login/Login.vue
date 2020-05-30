@@ -48,7 +48,7 @@ export default {
         //跳转到上一页
         this.$router.back()
         //导航栏变为登录状态
-        this.$bus.$emit('loaded')
+        this.$store.commit('load')
       })
     },
     //由登录跳转到注册

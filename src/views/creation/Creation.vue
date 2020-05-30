@@ -1,7 +1,13 @@
 <template>
   <div id="creation">
-    <div class="head">
-      <el-select v-model="article.type" placeholder="类型" class="choose">
+    <div v-if="!$store.state.isLoad">
+      <div class="noLoad">
+        啊哦！还没有登录哦，请先登录！
+      </div>
+    </div>
+    <div v-else>
+      <div class="head">
+      <el-select v-model="type" placeholder="类型" class="choose">
         <el-option
           v-for="(item,index) in typeList"
           :key="index"
@@ -9,15 +15,15 @@
           :value="item">
         </el-option>
       </el-select>
-      <input type="text" placeholder="标题" v-model="article.title">
+      <input type="text" placeholder="标题" v-model="title">
     </div>
     <div class="art_content">
-      <mavon-editor  ref="editor" v-model="article.content" class="content"/>
+      <mavon-editor  ref="editor" v-model="content" class="content"/>
     </div>
     <!-- <article-content/> -->
     <div class="other_msg">
         <div class="tag">标签</div>
-        <el-select v-model="article.tag" multiple placeholder="标签" class="more_choose">
+        <el-select v-model="tag" multiple placeholder="标签" class="more_choose">
           <el-option
             v-for="(item,index) in tagList"
             :key="index"
@@ -26,7 +32,7 @@
           </el-option>
         </el-select>
         <div class="category">分类</div>
-        <el-select v-model="article.category" multiple placeholder="分类" class="more_choose">
+        <el-select v-model="category" multiple placeholder="分类" class="more_choose">
           <el-option
             v-for="(item,index) in tagList"
             :key="index"
@@ -36,13 +42,14 @@
         </el-select>
     </div>
     <div class="publish" @click="handlePublish">发布文章</div>
-    <div class="save">保存草稿</div>
+    <div class="save" @click="handleSave">保存草稿</div>
+    </div>
   </div>
 </template>
 
 <script>
 
-// import ArticleContent from './childComp/ArticleContent'
+import { addBlog } from 'network/blog'
 
 import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
@@ -52,22 +59,43 @@ export default {
     return {
       typeList: ['原创','转载'],
       tagList: ['数据库','前端','后端','运维','大数据','人工智能','算法','其他'],
-      article: {
-        type: '',
-        title: '',
-        category: [],
-        tag: [],
-        content: ''
-      }
+      type: '',
+      title: '',
+      category: [],
+      tag: [],
+      content: ''
     }
   },
   components: {
-    // ArticleContent
     mavonEditor
   },
   methods: {
+    createBlog(type){
+      const blog = {
+        username: this.$store.state.token.username,
+        headImg: this.$store.state.token.headImg,
+        type: this.type,
+        title: this.title,
+        content: this.content,
+        tag: this.tag,
+        category: this.category,
+        thumbs: 0,
+        comment: [],
+        browse: 0,
+        date: new Date().getTime(),
+        publish: type
+      }
+      console.log(blog)
+      //将博客保存到数据库中
+      addBlog(blog).then((data) => {
+        console.log(data)
+      })
+    },
     handlePublish(){
-      console.log(this.article)
+      this.createBlog(true)
+    },
+    handleSave(){
+      this.createBlog(false)
     }
   }
 }
@@ -79,6 +107,14 @@ export default {
   margin-left: 20%;
   margin-top: 50px;
   padding-top: 30px;
+}
+.noLoad{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 20px;
+  color: rgb(0,122,204);
 }
 .choose{
   width: 10%;

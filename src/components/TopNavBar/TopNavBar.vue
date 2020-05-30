@@ -10,14 +10,14 @@
               <i slot="prefix" class="el-input__icon el-icon-search search-icon"></i>
             </el-input>
     </div>
-    <div class="admin" v-if="!isLoad">
+    <div class="admin" v-if="!$store.state.isLoad">
       <i class="el-icon-s-custom"></i>
       <span class="login" @click="loginBtn">登录/</span>
       <span @click="registerBtn">注册</span>
     </div>
-    <div class="load" v-if="isLoad">
-      <img :src="user.headImg">
-      <div class="user">{{user.username}}</div>
+    <div class="load" v-if="$store.state.isLoad">
+      <img :src="$store.state.token.headImg">
+      <div class="user">{{$store.state.token.username}}</div>
       <div @click="handleQuit">退出</div>
     </div>
   </div>
@@ -27,33 +27,17 @@
 
 import NavItem from './NavItem'
 
-import { getToken, removeToken } from 'network/storage'
+import { removeToken } from 'network/storage'
 
 export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','VIP会员'],
-      isLoad: false,  //是否登陆
-      user: {},
+      navList: ['博客','问答','创作','VIP会员']
     }
   },
   components: {
     NavItem
-  },
-  mounted(){
-    //当前是否为登录状态
-    const token = getToken()
-    console.log(token)
-    if(token.username !== undefined){//当前已登录
-      this.isLoad = true
-      this.user = token
-    }
-
-    this.$bus.$on('loaded',() => {
-      this.isLoad = true
-      this.user = token
-    })
   },
   methods: {
     loginBtn(){
@@ -64,8 +48,7 @@ export default {
     },
     handleQuit(){
       removeToken()
-      this.isLoad = false
-      this.user = {}
+      this.$store.commit('quit')
     }
   }
 }
