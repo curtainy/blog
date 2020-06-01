@@ -1,8 +1,6 @@
 <template>
-  <div id="creation">
-    <no-load v-if="!$store.state.isLoad"/>
-    <div v-else>
-      <div class="head">
+  <div id="edit_msg">
+     <div class="head">
         <el-select v-model="type" placeholder="类型" class="choose">
           <el-option
             v-for="(item,index) in typeList"
@@ -37,16 +35,13 @@
         </el-select>
       </div>
       <div class="publish" @click="handlePublish">发布文章</div>
-      <div class="save" @click="handleSave">保存草稿</div>
-    </div>
+      <div class="save" @click="handleBack">取消修改</div>
   </div>
 </template>
 
 <script>
 
-import { addBlog } from 'network/blog'
-
-import NoLoad from 'components/noload/NoLoad'
+import { modifyBlog } from 'network/blog'
 
 import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
@@ -56,16 +51,30 @@ export default {
     return {
       typeList: ['原创','转载'],
       tagList: ['数据库','前端','后端','运维','大数据','人工智能','算法','其他'],
-      type: '',
+      type: '原创',
       title: '',
       category: [],
       tag: [],
-      content: ''
+      content: '',
+      blog: '',
+      oldTitle: ''
     }
   },
   components: {
-    mavonEditor,
-    NoLoad
+    mavonEditor
+  },
+  activated(){
+    const title = this.$route.params.title
+    const blog = this.$store.state.myBlog.filter(elemnet => {
+      return elemnet.title === title
+    });
+    this.blog = blog[0]
+    this.type = blog[0].type
+    this.title = blog[0].title
+    this.oldTitle = blog[0].title
+    this.category = blog[0].category
+    this.tag = blog[0].tag
+    this.content = blog[0].content
   },
   methods: {
     createBlog(type){
@@ -73,41 +82,49 @@ export default {
         username: this.$store.state.token.username,
         headImg: this.$store.state.token.headImg,
         type: this.type,
+        oldTitle: this.oldTitle,
         title: this.title,
         content: this.content,
         tag: this.tag,
         category: this.category,
-        thumbs: 0,
-        comment: [],
-        browse: 0,
+        thumbs: this.blog.thumbs,
+        comment: this.blog.comment,
+        browse: this.blog.browse,
         date: new Date().getTime(),
         publish: type
       }
-      console.log(blog)
+      // console.log(blog)
       //将博客保存到数据库中
-      addBlog(blog).then((data) => {
-        console.log(data)
+      modifyBlog(blog).then((data) => {
+        // console.log(data)
         //将博客保存到store中
-        this.$store.commit('addBlog',blog)
+        this.$store.commit('modifyBlog',blog)
         //显示保存成功的弹窗
         this.$message({
           type: 'success',
-          message: '发布成功'
+          message: data.msg
+        })
+        //跳转到详情页面
+        this.$router.push({
+          path: '/detailblog',
+          query: {
+            blog
+          }
         })
       })
     },
     handlePublish(){
       this.createBlog(true)
     },
-    handleSave(){
-      this.createBlog(false)
+    handleBack(){
+      this.$router.back()
     }
   }
 }
 </script>
 
 <style>
-#creation{
+#edit_msg{
   width: 70%;
   margin-left: 15%;
   padding-top: 30px;
@@ -145,7 +162,6 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   height: 38px;
   width: 7%;
   border-radius: 5px;
-  /* border: 1px solid rgba(102,154,58); */
   background: rgba(102,154,58);
   color: white;
   display: inline-block;
@@ -179,5 +195,4 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   position: relative;
   left: -3px;
 }
-
 </style>

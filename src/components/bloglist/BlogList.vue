@@ -14,8 +14,8 @@
           <span>{{item.browse}}</span>
         </div>  
         <div class="action" v-show="isShow">
-          <span class="edit">编辑</span>
-          <span class="cancel">删除</span>
+          <span class="edit" @click="handleModify(item.title)">编辑</span>
+          <span class="cancel" @click="handleCancel(item.title)">删除</span>
         </div>
     </div>
   </div>
@@ -25,14 +25,14 @@
 
 import marked from 'marked'
 import { dateFormat } from 'common/util'
+import { cancelBlog } from 'network/blog'
 
 export default {
-  data(){
-    return {
-      isShow: true
-    }
-  },
   props: {
+    isShow: {
+      type: Boolean,
+      default: false
+    },
     blogList: {
       type: Array,
       default(){
@@ -52,6 +52,28 @@ export default {
     },
     date(input){
       return dateFormat(input)
+    }
+  },
+  methods: {
+    //编辑博客
+    handleModify(title){
+      this.$router.push('/modifyblog/'+ title)
+    },
+    //删除博客
+    handleCancel(title){
+      const bool = window.confirm('一旦删除不可恢复，确认删除吗？')
+      if(bool){
+        cancelBlog({username:this.$store.state.token.username,title:title})
+        .then((data) => {
+          console.log(data)
+          //在store中删除该博客
+          this.$store.commit('cancelBlog',title)
+          this.$message({
+            type: 'success',
+            message: data.msg
+          })
+        })
+      }
     }
   }
 }

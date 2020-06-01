@@ -37,8 +37,16 @@ const routes = [
     component: () => import('views/myblog/MyBlog')
   },
   {
+    path: '/modifyblog/:title',
+    component: () => import('views/modifyblog/ModifyBlog')
+  },
+  {
     path: '/editmessage',
     component: () => import('views/editmessage/EditMessage')
+  },
+  {
+    path: '/detailblog',
+    component: () => import('components/detailblog/DetailBlog')
   }
 ]
 

@@ -20,3 +20,24 @@ export function myBlog(username){
     params: username
   })
 }
+
+//删除博客
+export function cancelBlog(data){
+  return request({
+    url: '/cancelblog',
+    method: 'get',
+    params: data
+  })
+}
+
+//修改博客
+export function modifyBlog(blog){
+  return request({
+    headers: {
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+    url: '/modifyblog',
+    method: 'post',
+    data: blog
+  })
+}
