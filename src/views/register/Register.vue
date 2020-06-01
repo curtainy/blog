@@ -88,13 +88,10 @@ export default {
 #register{
   height: calc(100vh - 50px);
   width: 100%;
-  margin-top: 50px;
 
   background-image: url('../../assets/img/login.jpg');
   background-size: cover;
   background-position: center center;
-
-  position: relative;
 }
 .form_register{
   width: 400px;

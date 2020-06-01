@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 const state = {
   token: {},
-  isLoad: false
+  isLoad: false,
 }
 
 const mutations = {

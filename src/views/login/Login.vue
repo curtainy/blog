@@ -49,6 +49,11 @@ export default {
         this.$router.back()
         //导航栏变为登录状态
         this.$store.commit('load')
+        //弹出成功的消息提示框
+        this.$message({
+          message: '登录成功',
+          type: 'success'
+        })
       })
     },
     //由登录跳转到注册
@@ -97,7 +102,7 @@ export default {
   padding: 20px 0;
   text-align: center;
 }
-.user,.pass{
+.login_form.user,.login_form.pass{
   border: 1px solid gainsboro;
 }
 .pass{
@@ -118,10 +123,10 @@ export default {
   position: relative;
   top: 6px;
 }
-.input{
+.user>.input,.pass>.input{
   height: 28px;
   width: 255px;
-  margin-top: 0;
+  /* margin-top: 0; */
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   border: 0px solid gainsboro;

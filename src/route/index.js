@@ -31,6 +31,14 @@ const routes = [
   {
     path: '/register',
     component: () => import('views/register/Register')
+  },
+  {
+    path: '/myblog',
+    component: () => import('views/myblog/MyBlog')
+  },
+  {
+    path: '/editmessage',
+    component: () => import('views/editmessage/EditMessage')
   }
 ]
 
@@ -38,3 +46,4 @@ export default new VueRouter({
   routes,
   mode: 'history'
 })
+

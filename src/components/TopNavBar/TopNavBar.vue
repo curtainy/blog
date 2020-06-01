@@ -17,8 +17,13 @@
     </div>
     <div class="load" v-if="$store.state.isLoad">
       <img :src="$store.state.token.headImg">
-      <div class="user">{{$store.state.token.username}}</div>
-      <div @click="handleQuit">退出</div>
+      <div class="user" @mouseenter="show">{{$store.state.token.username}}</div>
+      <div class="droplist" v-show="isShow" @mouseleave="hidden">
+        <div v-for="(item,index) in chooseList" :key="index"
+              @click="handleChoose(index)" :class="{active:currentIndex == index}">
+          {{item}}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +38,10 @@ export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','VIP会员']
+      navList: ['博客','问答','创作','VIP会员'],
+      chooseList: ['我的博客','编辑资料','退出登录'],
+      currentIndex: 0,
+      isShow: false
     }
   },
   components: {
@@ -46,9 +54,20 @@ export default {
     registerBtn(){
       this.$router.push('/register')
     },
-    handleQuit(){
-      removeToken()
-      this.$store.commit('quit')
+    show(){
+      this.isShow = true
+    },
+    hidden(){
+      this.isShow = false
+    },
+    handleChoose(index){
+      this.currentIndex = index
+      switch(index){
+        case 0: this.$router.push('/myblog'); break;
+        case 1: this.$router.push('/editmessage'); break;
+        case 2: removeToken(); this.$store.commit('quit'); break;
+        default:
+      }
     }
   }
 }
@@ -89,7 +108,7 @@ export default {
   width: 300px;
   margin: 0 50px;
 }
-.input{
+.search>.input{
   margin-top: 5px;
 }
 .admin{
@@ -105,14 +124,28 @@ export default {
   border-radius: 50%;
   margin: 5px 15px 5px 60px;
 }
-.load div{
+
+.user{
   height: 100%;
   line-height: 100%;
   display: inline-block;
   position: relative;
   top: -20px;
-}
-.user{
   margin-right: 10px;
+}
+.droplist{
+  position: fixed;
+  top: 50px;
+  right: 100px;
+  width: 100px;
+}
+.droplist>div{
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  background: rgb(48,64,70);
+}
+.active{
+  color: rgb(151,248,70);
 }
 </style>

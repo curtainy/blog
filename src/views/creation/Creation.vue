@@ -1,27 +1,22 @@
 <template>
   <div id="creation">
-    <div v-if="!$store.state.isLoad">
-      <div class="noLoad">
-        啊哦！还没有登录哦，请先登录！
-      </div>
-    </div>
+    <no-load v-if="!$store.state.isLoad"/>
     <div v-else>
       <div class="head">
-      <el-select v-model="type" placeholder="类型" class="choose">
-        <el-option
-          v-for="(item,index) in typeList"
-          :key="index"
-          :label="item"
-          :value="item">
-        </el-option>
-      </el-select>
-      <input type="text" placeholder="标题" v-model="title">
-    </div>
-    <div class="art_content">
-      <mavon-editor  ref="editor" v-model="content" class="content"/>
-    </div>
-    <!-- <article-content/> -->
-    <div class="other_msg">
+        <el-select v-model="type" placeholder="类型" class="choose">
+          <el-option
+            v-for="(item,index) in typeList"
+            :key="index"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+        <input type="text" placeholder="标题" v-model="title">
+      </div>
+      <div class="art_content">
+        <mavon-editor  ref="editor" v-model="content" class="content"/>
+      </div>
+      <div class="other_msg">
         <div class="tag">标签</div>
         <el-select v-model="tag" multiple placeholder="标签" class="more_choose">
           <el-option
@@ -40,9 +35,9 @@
             :value="item">
           </el-option>
         </el-select>
-    </div>
-    <div class="publish" @click="handlePublish">发布文章</div>
-    <div class="save" @click="handleSave">保存草稿</div>
+      </div>
+      <div class="publish" @click="handlePublish">发布文章</div>
+      <div class="save" @click="handleSave">保存草稿</div>
     </div>
   </div>
 </template>
@@ -50,6 +45,8 @@
 <script>
 
 import { addBlog } from 'network/blog'
+
+import NoLoad from 'components/noload/NoLoad'
 
 import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
@@ -67,7 +64,8 @@ export default {
     }
   },
   components: {
-    mavonEditor
+    mavonEditor,
+    NoLoad
   },
   methods: {
     createBlog(type){
@@ -89,6 +87,11 @@ export default {
       //将博客保存到数据库中
       addBlog(blog).then((data) => {
         console.log(data)
+        //显示保存成功的弹窗
+        this.$message({
+          type: 'success',
+          message: '发布成功'
+        })
       })
     },
     handlePublish(){
@@ -103,18 +106,9 @@ export default {
 
 <style>
 #creation{
-  width: 60%;
-  margin-left: 20%;
-  margin-top: 50px;
+  width: 70%;
+  margin-left: 15%;
   padding-top: 30px;
-}
-.noLoad{
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
-  font-size: 20px;
-  color: rgb(0,122,204);
 }
 .choose{
   width: 10%;
@@ -128,7 +122,7 @@ export default {
   height: 35px;
   border-radius: 5px;
   border: 1px solid gainsboro;
-  margin-left: 5px;
+  margin-left: 6px;
   padding-left: 5px;
 
   position: relative;
@@ -159,7 +153,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   margin-top: 20px;
 }
 .category{
-  margin-left: 14%;
+  margin-left: 15.5%;
 }
 .more_choose{
   width: 35%;
