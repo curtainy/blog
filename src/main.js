@@ -3,21 +3,23 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 import router from './route'
 import store from './store'
-// import hljs from 'highlight'
+import VueHighlightJS from 'vue-highlight.js'
+import hljs from 'highlight.js'
 
-// import '@/assets/css/markdown/dark.css'
+import 'highlight.js/styles/atom-one-dark.css'
 import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+Vue.use(VueHighlightJS)
 
-// Vue.directive('highlight', (el) => {
-//   let blocks = el.querySelectorAll('pre code')
-//   blocks.forEach((block) => {
-//       hljs.highlightBlock(block)
-//   })
-// })
+Vue.directive('highlight', (el) => {
+  let blocks = el.querySelectorAll('pre code')
+  blocks.forEach((block) => {
+      hljs.highlightBlock(block)
+  })
+})
 
 new Vue({
   router,

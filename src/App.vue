@@ -105,7 +105,7 @@
         <li>99</li>
         <li>100</li>
       </ul> -->
-      <keep-alive>
+      <keep-alive exclude="DetailBlog,ModifyBlog">
         <router-view/>
       </keep-alive>
     </div>

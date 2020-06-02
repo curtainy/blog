@@ -47,6 +47,7 @@ import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
 
 export default {
+  name: 'ModifyBlog',
   data(){
     return {
       typeList: ['原创','转载'],
@@ -63,19 +64,19 @@ export default {
   components: {
     mavonEditor
   },
-  activated(){
-    const title = this.$route.params.title
-    const blog = this.$store.state.myBlog.filter(elemnet => {
-      return elemnet.title === title
-    });
-    this.blog = blog[0]
-    this.type = blog[0].type
-    this.title = blog[0].title
-    this.oldTitle = blog[0].title
-    this.category = blog[0].category
-    this.tag = blog[0].tag
-    this.content = blog[0].content
-  },
+  // activated(){
+  //   const title = this.$route.params.title
+  //   const blog = this.$store.state.myBlog.filter(elemnet => {
+  //     return elemnet.title === title
+  //   });
+  //   this.blog = blog[0]
+  //   this.type = blog[0].type
+  //   this.title = blog[0].title
+  //   this.oldTitle = blog[0].title
+  //   this.category = blog[0].category
+  //   this.tag = blog[0].tag
+  //   this.content = blog[0].content
+  // },
   methods: {
     createBlog(type){
       const blog = {

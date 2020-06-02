@@ -2,7 +2,7 @@
   <div class="blog_list">
     <div v-for="(item,index) in blogList" :key="index" class="list_item">
         <div class="bl_type">{{item.type}}</div>
-        <div class="bl_title">{{item.title}}</div>
+        <div class="bl_title" @click="toDetail(item.title)">{{item.title}}</div>
         <div class="bl_text">{{item.content | articleText}}</div>
         <div class="bl_time">{{item.date | date}}</div>
         <div class="bl_comment">
@@ -74,6 +74,15 @@ export default {
           })
         })
       }
+    },
+    //跳转到详情页面
+    toDetail(title){
+      this.$router.push({
+        path: '/detailblog',
+        query: {
+          title
+        }
+      })
     }
   }
 }

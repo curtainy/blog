@@ -51,6 +51,10 @@ const mutations = {
   }
 }
 
+// const getters = {
+//   //获取博客详细信息
+//   getDetailBlog()
+// }
 
 //用户登录状态
 if(getToken().username != undefined){

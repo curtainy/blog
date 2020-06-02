@@ -41,3 +41,4 @@ export function modifyBlog(blog){
     data: blog
   })
 }
+
