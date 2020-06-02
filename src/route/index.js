@@ -6,11 +6,11 @@ vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/article'
+    redirect: '/allblog'
   },
   {
-    path: '/article',
-    component: () => import('views/article/Article')
+    path: '/allblog',
+    component: () => import('views/allblog/AllBlog')
   },
   {
     path: '/creation',

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { getToken } from 'network/storage'
-import { myBlog } from 'network/blog'
+import { myBlog, allBlog } from 'network/blog'
 
 
 Vue.use(Vuex)
@@ -10,8 +10,24 @@ Vue.use(Vuex)
 const state = {
   token: {},
   isLoad: false,
-  myBlog: []
+  myBlog: [],
+  AllBlog: []
 }
+
+//获取所有博客
+allBlog().then((data) => {
+  state.allBlog = data.data
+})
+
+//用户登录状态
+if(getToken().username != undefined){
+  state.token = getToken()
+  state.isLoad = true
+  myBlog({username:state.token.username}).then((data) => {
+    state.myBlog = data.data
+  })
+}
+
 
 const mutations = {
   //退出登录
@@ -51,19 +67,7 @@ const mutations = {
   }
 }
 
-// const getters = {
-//   //获取博客详细信息
-//   getDetailBlog()
-// }
 
-//用户登录状态
-if(getToken().username != undefined){
-  state.token = getToken()
-  state.isLoad = true
-  myBlog({username:state.token.username}).then((data) => {
-    state.myBlog = data.data
-  })
-}
 
 const store = new Vuex.Store({
   state,

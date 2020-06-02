@@ -42,3 +42,10 @@ export function modifyBlog(blog){
   })
 }
 
+//获取所有博客
+export function allBlog(){
+  return request({
+    url: '/allblog',
+    method: 'get'
+  })
+}
