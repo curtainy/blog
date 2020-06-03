@@ -41,6 +41,7 @@
 
 <script>
 
+import { mapGetters } from 'vuex'
 import { modifyBlog } from 'network/blog'
 
 import { mavonEditor } from 'mavon-editor'
@@ -64,19 +65,22 @@ export default {
   components: {
     mavonEditor
   },
-  // activated(){
-  //   const title = this.$route.params.title
-  //   const blog = this.$store.state.myBlog.filter(elemnet => {
-  //     return elemnet.title === title
-  //   });
-  //   this.blog = blog[0]
-  //   this.type = blog[0].type
-  //   this.title = blog[0].title
-  //   this.oldTitle = blog[0].title
-  //   this.category = blog[0].category
-  //   this.tag = blog[0].tag
-  //   this.content = blog[0].content
-  // },
+  computed: {
+    ...mapGetters(['getMyBlog'])
+  },
+  mounted(){
+    const title = this.$route.params.title
+    const blog = this.getMyBlog.filter(elemnet => {
+      return elemnet.title === title
+    });
+    this.blog = blog[0]
+    this.type = blog[0].type
+    this.title = blog[0].title
+    this.oldTitle = blog[0].title
+    this.category = blog[0].category
+    this.tag = blog[0].tag
+    this.content = blog[0].content
+  },
   methods: {
     createBlog(type){
       const blog = {
@@ -91,20 +95,20 @@ export default {
         thumbs: this.blog.thumbs,
         comment: this.blog.comment,
         browse: this.blog.browse,
-        date: new Date().getTime(),
+        date: this.blog.date,
         publish: type
       }
-      // console.log(blog)
+      console.log(blog)
       //将博客保存到数据库中
       modifyBlog(blog).then((data) => {
-        // console.log(data)
-        //将博客保存到store中
-        this.$store.commit('modifyBlog',blog)
-        //显示保存成功的弹窗
-        this.$message({
-          type: 'success',
-          message: data.msg
-        })
+       if(data.code === 0){
+          //将博客保存到store中
+          this.$store.commit('modifyBlog',blog)
+          //显示保存成功的弹窗
+          this.$message({
+            type: 'success',
+            message: data.msg
+          })
         //跳转到详情页面
         this.$router.push({
           path: '/detailblog',
@@ -112,6 +116,7 @@ export default {
             blog
           }
         })
+       }
       })
     },
     handlePublish(){

@@ -39,7 +39,7 @@ export default {
     return {
       input: '',
       navList: ['博客','问答','创作','VIP会员'],
-      chooseList: ['我的博客','编辑资料','退出登录'],
+      chooseList: ['我的博客','个人中心','退出登录'],
       currentIndex: 0,
       isShow: false
     }

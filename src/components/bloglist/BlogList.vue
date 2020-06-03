@@ -14,6 +14,7 @@
           <span>{{item.browse}}</span>
         </div>  
         <div class="action" v-show="isShow">
+          <span  v-if="!item.publish" class="pub" @click="handlePublish(item.username,item.title)">发布</span>
           <span class="edit" @click="handleModify(item.title)">编辑</span>
           <span class="cancel" @click="handleCancel(item.title)">删除</span>
         </div>
@@ -25,7 +26,7 @@
 
 import marked from 'marked'
 import { dateFormat } from 'common/util'
-import { cancelBlog } from 'network/blog'
+import { cancelBlog, saveToPub } from 'network/blog'
 
 export default {
   props: {
@@ -75,11 +76,25 @@ export default {
         })
       }
     },
+    //发布博客
+    handlePublish(username,title){
+      //修改数据库中内容
+      saveToPub({username,title}).then((data) => {
+        console.log(data)
+        this.$message({
+          type: 'success',
+          message: data.msg
+        })
+        //修改store中数据
+        this.$store.commit('saveToPub',title)
+      })
+    },
     //跳转到详情页面
     toDetail(title){
       this.$router.push({
         path: '/detailblog',
         query: {
+          username: this.$store.state.token.username,
           title
         }
       })
@@ -138,11 +153,14 @@ export default {
   margin-left: 30px;
 }
 .action{
-  margin-right: 0;
+  margin-right: 40px;
   font-size: 15px;
-  margin-left: 63%;
+  float: right;
 }
-.edit{
+.action>span{
+  float: left;
+}
+.edit,.pub{
   color: rgba(102,154,58);
   margin-right: 10px;
 }

@@ -13,13 +13,13 @@ export function addBlog(blog){
 }
 
 ///我的博客
-export function myBlog(username){
-  return request({
-    url: '/myblog',
-    method: 'get',
-    params: username
-  })
-}
+// export function myBlog(username){
+//   return request({
+//     url: '/myblog',
+//     method: 'get',
+//     params: username
+//   })
+// }
 
 //删除博客
 export function cancelBlog(data){
@@ -47,5 +47,26 @@ export function allBlog(){
   return request({
     url: '/allblog',
     method: 'get'
+  })
+}
+
+//将草稿发布
+export function saveToPub(data){
+  return request({
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    url: '/savetopub',
+    method: 'post',
+    data
+  })
+}
+
+//获取用户还未发布的博客
+export function noPubBlog(username){
+  return request({
+    url: '/nopubblog',
+    method: 'get',
+    params: username
   })
 }

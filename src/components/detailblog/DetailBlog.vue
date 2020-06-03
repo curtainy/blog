@@ -11,6 +11,11 @@
       <span class="number">{{blog.browse}}</span>
     </div>
     <div v-highlight v-html="content"></div>
+    <div class="db_comment">
+      <img v-if="this.$store.state.isLoad" :src="blog.headImg">
+      <textarea rows="2" v-model="commentConent" placeholder="优质评论可以帮助作者获得更高的权重"></textarea>
+      <div @click="sendComment">发送</div>
+    </div>
   </div>
 </template>
 
@@ -18,32 +23,54 @@
 
 import marked from 'marked'
 import { dateFormat } from 'common/util'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DetailBlog',
   data(){
     return {
       blog: '',
-      content: ''
+      content: '',
+      commentConent: ''
     }
+  },
+  computed: {
+    ...mapGetters(['getMyBlog'])
   },
   created(){
     const {username,title} = this.$route.query
     console.log({username,title})
     //来源我的博客
-    if(username == undefined){
-      this.$store.state.myBlog.forEach(item => {
+    // if(username == this.$store.state.token.username){
+      this.getMyBlog.forEach(item => {
         if(item.title === title) this.blog = item
       })
       this.content = marked(this.blog.content)
-      console.log(this.content)
+      // console.log(this.blog)
 
-      console.log(this.blog.comment.length)
-    }
+      // console.log(this.blog.comment.length)
+    // }
   },
   filters: {
     date(input){
       return dateFormat(input)
+    }
+  },
+  methods: {
+    sendComment(){
+      if(this.commentConent == ''){//评论内容为空
+        this.$message.error('评论内容不能为空')
+      }else if(!this.$store.state.isLoad){//还未登录
+        this.$message.error('登录后才能进行评论哦')
+      }else{
+        const comment = {
+          username: this.$store.state.token.username,
+          headImg: this.$store.state.token.headImg,
+          content: this.commentConent,
+          date: new Date().getTime()
+        }
+        console.log(comment)
+      }
     }
   }
 }
@@ -81,9 +108,36 @@ export default {
   margin: 2px 10px 0 1px;
 }
 .db_date{
-  margin: 0 30px;
+  margin: 0 50px;
 }
 .number{
-  margin: 0 10px 0 5px;
+  margin: 0 15px 0 5px;
+}
+.db_comment>img{
+  margin-top: 50px;
+  margin-right: 20px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+.db_comment>textarea{
+  width: 82%;
+}
+textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
+    color: gainsboro;
+    font-size: 14px;
+}
+.db_comment>div{
+  display: inline-block;
+  width: 80px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  background: rgba(102,154,58);
+  color: white;
+  position: relative;
+  top: -10px;
+  margin-left: 20px;
+  border-radius: 5px;
 }
 </style>

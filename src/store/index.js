@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { getToken } from 'network/storage'
-import { myBlog, allBlog } from 'network/blog'
+import { noPubBlog ,allBlog } from 'network/blog'
 
 
 Vue.use(Vuex)
@@ -10,8 +10,8 @@ Vue.use(Vuex)
 const state = {
   token: {},
   isLoad: false,
-  myBlog: [],
-  AllBlog: []
+  allBlog: [],
+  noPubBlog: []
 }
 
 //获取所有博客
@@ -23,36 +23,44 @@ allBlog().then((data) => {
 if(getToken().username != undefined){
   state.token = getToken()
   state.isLoad = true
-  myBlog({username:state.token.username}).then((data) => {
-    state.myBlog = data.data
+  noPubBlog({username:state.token.username}).then((data) => {
+    state.noPubBlog = data.data
   })
 }
 
+const getters = {
+  getMyBlog(state){
+    const myBlog = state.allBlog.filter(blog => {
+      return blog.username === state.token.username
+    })
+    return myBlog
+  }
+}
 
 const mutations = {
   //退出登录
   quit(state){
     state.isLoad = false
     state.token = {}
-    state.myBlog = []
+    // state.myBlog = []
   },
   //登录注册
   load(state){
     state.token = getToken()
     state.isLoad = true
-    myBlog({username:state.token.username}).then((data) => {
-      state.myBlog = data.data
-    })
+    // myBlog({username:state.token.username}).then((data) => {
+    //   state.myBlog = data.data
+    // })
   },
   //添加博客
   addBlog(state,blog){
-    state.myBlog.push(blog)
+    state.allBlog.push(blog)
   },
   //删除博客
   cancelBlog(state,title){
-    for(let i = 0; i < state.myBlog.length; i++){
-      if(state.myBlog[i].title === title){
-        state.myBlog.splice(i,1)
+    for(let i = 0; i < state.allBlog.length; i++){
+      if(state.allBlog[i].title === title && state.allBlog[i].username === state.token.username){
+        state.allBlog.splice(i,1)
         break;
       }
     }
@@ -64,6 +72,20 @@ const mutations = {
     delete blog.oldTitle
     //新增修改后的
     this.commit('addBlog',blog)
+  },
+  //保存转发布
+  saveToPub(state,title){
+    //从草稿箱中删除
+    var blog
+    for(let i = 0; i < state.noPubBlog.length; i++){
+      if(state.noPubBlog[i].title === title && state.noPubBlog[i].username === state.token.username){
+        blog = state.noPubBlog.splice(i,1)
+        break;
+      }
+    }
+    blog.publish = true
+    //添加到已发布博客数组中
+    this.commit('addBlog',blog)
   }
 }
 
@@ -71,6 +93,7 @@ const mutations = {
 
 const store = new Vuex.Store({
   state,
+  getters,
   mutations
 })
 
