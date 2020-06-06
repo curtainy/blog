@@ -17,7 +17,7 @@
       <textarea rows="2" ref="cnt" autofocus v-model="commentConent" placeholder="优质评论可以帮助作者获得更高的权重"></textarea>
       <div @click="sendComment(blog.title)">发表评论</div>
     </div>
-    <comment-list :commentList="blog.comment" @responseCom="responseCom"/>
+    <comment-list :commentList="blog.comment" @resComment="resComment"/>
   </div>
 </template>
 
@@ -83,10 +83,7 @@ export default {
             console.log(data)
             if(data.code === 0){
               //弹窗
-              this.$message({
-                type: 'success',
-                message: data.msg
-              })
+              this.$message({type: 'success', message: data.msg})
               //修改store中的allBlog
               this.$store.commit('publishComment',payload)
               //清空评论中内容
@@ -94,17 +91,24 @@ export default {
             }
           })
         }else{ //回复评论
+          console.log('---')
           delete comment.response
           const payload = {username:comment.username,title,index:this.resIndex,comment}
-          //修改store
-          this.$store.commit('responseComment',payload)
-          this.commentConent = ''
-          this.type = true
+          publishComment(payload).then(data => {
+            console.log(data)
+            if(data.code === 0){
+              this.$message({type: 'success',message: data.msg})
+              //修改store
+              this.$store.commit('responseComment',payload)
+              this.commentConent = ''
+              this.type = true
+            }
+          })
         }
       }
     },
     //回复评论
-    responseCom(index,cnthead){
+    resComment(index,cnthead){
       this.commentConent = cnthead
       this.resIndex = index
       this.type = false

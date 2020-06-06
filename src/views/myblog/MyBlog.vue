@@ -36,7 +36,7 @@ export default {
     type(){
       if(this.type == '1') this.blogList = this.getMyBlog
       else this.blogList = this.$store.state.noPubBlog
-      console.log(this.blogList)
+      // console.log(this.blogList)
     }
   }
 }

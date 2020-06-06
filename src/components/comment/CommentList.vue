@@ -1,19 +1,19 @@
 <template>
   <div v-if="commentList.length">
-    <div v-for="(comment,index) in commentList" 
-           :key="index" class="comment_item">
+    <div v-for="(comment,index1) in commentList" 
+           :key="index1" class="comment_item">
         <img :src="comment.headImg">
         <span>{{comment.username}}: </span>
         <span>{{comment.content}}</span>
         <span>{{comment.date | date}}</span>
-        <span @click="resComment(index,comment.username)" class="res">回复</span>
-        <div v-for="(response,index) in comment.response" 
-             :key="index" class="response_item">
+        <span @click="resComment(index1,comment.username)" class="res">回复</span>
+        <div v-for="(response,index2) in comment.response" 
+             :key="index2" class="response_item">
           <img :src="response.headImg">
           <span>{{response.username}}: </span>
           <span>{{response.content}}</span>
           <span>{{response.date | date}}</span>
-          <span @click="resResponse(index,response.username)" class="res">回复</span>
+          <span @click="resComment(index1,response.username)" class="res">回复</span>
         </div>
     </div>
   </div>
@@ -39,22 +39,23 @@ export default {
   },
   methods: {
     //回复评论
-    handleRes(index,username){
+    resComment(index,username){
       const cnthead = '@'+ username + ' '
       console.log(index,cnthead)
       //给父组件传递要回复的评论所在索引和被回复人的昵称
-      this.$emit('responseCom',index,cnthead)
-    }
+      this.$emit('resComment',index,cnthead)
+    },
   }
 }
 </script>
 
 <style>
-.comment_item,.response_item{
+.comment_item{
   padding: 10px 0;
   border-bottom: 1px solid gainsboro;
 }
 .response_item{
+  padding: 10px 0;
   padding-left: 30px;
 }
 .comment_item span{
