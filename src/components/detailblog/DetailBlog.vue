@@ -13,17 +13,21 @@
     <div v-highlight v-html="content"></div>
     <div class="db_comment">
       <img v-if="this.$store.state.isLoad" :src="blog.headImg">
-      <textarea rows="2" v-model="commentConent" placeholder="优质评论可以帮助作者获得更高的权重"></textarea>
-      <div @click="sendComment">发送</div>
+      <img v-else src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=145692761,4091651670&fm=26&gp=0.jpg">
+      <textarea rows="2" ref="cnt" autofocus v-model="commentConent" placeholder="优质评论可以帮助作者获得更高的权重"></textarea>
+      <div @click="sendComment(blog.title)">发表评论</div>
     </div>
+    <comment-list :commentList="blog.comment" @responseCom="responseCom"/>
   </div>
 </template>
 
 <script>
 
 import marked from 'marked'
+import CommentList from 'components/comment/CommentList'
 import { dateFormat } from 'common/util'
 import { mapGetters } from 'vuex'
+import { publishComment } from 'network/blog'
 
 export default {
   name: 'DetailBlog',
@@ -31,8 +35,13 @@ export default {
     return {
       blog: '',
       content: '',
-      commentConent: ''
+      commentConent: '',
+      type: true,   //true发表或false评论
+      resIndex: ''//被回复评论的索引
     }
+  },
+  components:{
+    CommentList
   },
   computed: {
     ...mapGetters(['getMyBlog'])
@@ -41,15 +50,10 @@ export default {
     const {username,title} = this.$route.query
     console.log({username,title})
     //来源我的博客
-    // if(username == this.$store.state.token.username){
-      this.getMyBlog.forEach(item => {
-        if(item.title === title) this.blog = item
-      })
-      this.content = marked(this.blog.content)
-      // console.log(this.blog)
-
-      // console.log(this.blog.comment.length)
-    // }
+    this.getMyBlog.forEach(item => {
+      if(item.title === title) this.blog = item
+    })
+    this.content = marked(this.blog.content)
   },
   filters: {
     date(input){
@@ -57,20 +61,53 @@ export default {
     }
   },
   methods: {
-    sendComment(){
+    //发表评论
+    sendComment(title){
       if(this.commentConent == ''){//评论内容为空
         this.$message.error('评论内容不能为空')
       }else if(!this.$store.state.isLoad){//还未登录
         this.$message.error('登录后才能进行评论哦')
-      }else{
+      }else{ 
         const comment = {
           username: this.$store.state.token.username,
           headImg: this.$store.state.token.headImg,
           content: this.commentConent,
-          date: new Date().getTime()
+          date: new Date().getTime(),
+          response: []
         }
-        console.log(comment)
+
+        if(this.type){ //发表评论
+          const payload = {username:comment.username,title:title,comment}
+          publishComment(payload)
+          .then((data) => {
+            console.log(data)
+            if(data.code === 0){
+              //弹窗
+              this.$message({
+                type: 'success',
+                message: data.msg
+              })
+              //修改store中的allBlog
+              this.$store.commit('publishComment',payload)
+              //清空评论中内容
+              this.commentConent = ''
+            }
+          })
+        }else{ //回复评论
+          delete comment.response
+          const payload = {username:comment.username,title,index:this.resIndex,comment}
+          //修改store
+          this.$store.commit('responseComment',payload)
+          this.commentConent = ''
+          this.type = true
+        }
       }
+    },
+    //回复评论
+    responseCom(index,cnthead){
+      this.commentConent = cnthead
+      this.resIndex = index
+      this.type = false
     }
   }
 }
@@ -113,6 +150,7 @@ export default {
 .number{
   margin: 0 15px 0 5px;
 }
+
 .db_comment>img{
   margin-top: 50px;
   margin-right: 20px;
@@ -138,6 +176,7 @@ textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   position: relative;
   top: -10px;
   margin-left: 20px;
+  margin-bottom: 10px;
   border-radius: 5px;
 }
 </style>

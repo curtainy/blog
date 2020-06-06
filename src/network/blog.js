@@ -70,3 +70,15 @@ export function noPubBlog(username){
     params: username
   })
 }
+
+//发表评论
+export function publishComment(data){
+  return request({
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded' 
+    },
+    url: '/publishcomment',
+    method: 'post',
+    data
+  })
+}

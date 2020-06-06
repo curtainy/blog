@@ -86,6 +86,22 @@ const mutations = {
     blog.publish = true
     //添加到已发布博客数组中
     this.commit('addBlog',blog)
+  },
+  //提交评论
+  publishComment(state,payload){
+    state.allBlog.forEach(blog => {
+      if(blog.username === payload.username && blog.title === payload.title){
+        blog.comment.push(payload.comment)
+      }
+    })
+  },
+  //回复评论
+  responseComment(state,payload){
+    state.allBlog.forEach(blog => {
+      if(blog.username === payload.username && blog.title === payload.title){
+        blog.comment[payload.index].response.push(payload.comment)
+      }
+    })
   }
 }
 
