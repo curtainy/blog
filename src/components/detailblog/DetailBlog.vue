@@ -6,7 +6,7 @@
       <span>{{blog.username}}</span>
       <span class="db_date">{{blog.date | date}}</span>
       <i class="el-icon-chat-line-round"></i>
-      <span class="number">{{blog.comment.length}}</span>
+      <span class="number">{{getLength(blog.comment)}}</span>
       <i class="el-icon-view"></i>
       <span class="number">{{blog.browse}}</span>
     </div>
@@ -25,9 +25,9 @@
 
 import marked from 'marked'
 import CommentList from 'components/comment/CommentList'
+import {mapGetters} from 'vuex'
 import { dateFormat } from 'common/util'
-import { mapGetters } from 'vuex'
-import { publishComment } from 'network/blog'
+import { publishComment, addBrowse } from 'network/blog'
 
 export default {
   name: 'DetailBlog',
@@ -44,16 +44,36 @@ export default {
     CommentList
   },
   computed: {
-    ...mapGetters(['getMyBlog'])
+    ...mapGetters(['getMyBlog']),
+    getLength(){
+      return function(arr){
+        let count = arr.length
+        arr.forEach(item => {
+          count += item.response.length
+        })
+        return count
+      }
+    }
   },
   created(){
     const {username,title} = this.$route.query
-    console.log({username,title})
-    //来源我的博客
-    this.getMyBlog.forEach(item => {
-      if(item.title === title) this.blog = item
+    // console.log({username,title})
+    var blog = ''
+    //获取博客内容
+    if(username == this.$store.state.token.username) blog = this.getMyBlog
+    else blog = this.$store.state.allBlog
+    blog.forEach(item => {
+      if(item.title === title && item.username == username) this.blog = item
     })
     this.content = marked(this.blog.content)
+    //博客访问量+1
+    addBrowse({username,title}).then(data => {
+      console.log(data)
+      if(data.code == 0){
+        console.log('success')
+        this.$store.commit('addBrowse',{username,title})
+      }
+    })
   },
   filters: {
     date(input){
@@ -80,7 +100,6 @@ export default {
           const payload = {username:comment.username,title:title,comment}
           publishComment(payload)
           .then((data) => {
-            console.log(data)
             if(data.code === 0){
               //弹窗
               this.$message({type: 'success', message: data.msg})
@@ -91,11 +110,9 @@ export default {
             }
           })
         }else{ //回复评论
-          console.log('---')
           delete comment.response
           const payload = {username:comment.username,title,index:this.resIndex,comment}
           publishComment(payload).then(data => {
-            console.log(data)
             if(data.code === 0){
               this.$message({type: 'success',message: data.msg})
               //修改store

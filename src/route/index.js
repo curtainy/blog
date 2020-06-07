@@ -41,8 +41,8 @@ const routes = [
     component: () => import('views/modifyblog/ModifyBlog')
   },
   {
-    path: '/editmessage',
-    component: () => import('views/editmessage/EditMessage')
+    path: '/profile',
+    component: () => import('views/profile/Profile')
   },
   {
     path: '/detailblog',

@@ -82,3 +82,15 @@ export function publishComment(data){
     data
   })
 }
+
+//访问量+1
+export function addBrowse(data){
+  return request({
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    url: '/addbrowse',
+    method: 'post',
+    data
+  })
+}

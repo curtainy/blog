@@ -2,12 +2,12 @@
   <div class="blog_list">
     <div v-for="(item,index) in blogList" :key="index" class="list_item">
         <div class="bl_type">{{item.type}}</div>
-        <div class="bl_title" @click="toDetail(item.title)">{{item.title}}</div>
+        <div class="bl_title" @click="toDetail(item.username,item.title)">{{item.title}}</div>
         <div class="bl_text">{{item.content | articleText}}</div>
         <div class="bl_time">{{item.date | date}}</div>
         <div class="bl_comment">
           <i class="el-icon-chat-line-round"></i>
-          <span>{{item.comment.length}}</span>
+          <span>{{getLength(item.comment)}}</span>
         </div>
         <div class="bl_browse">
           <i class="el-icon-view"></i>
@@ -38,6 +38,17 @@ export default {
       type: Array,
       default(){
         return []
+      }
+    }
+  },
+  computed: {
+    getLength(){
+      return function(arr){
+        let count = arr.length
+        arr.forEach(item => {
+          count += item.response.length
+        })
+        return count
       }
     }
   },
@@ -90,11 +101,11 @@ export default {
       })
     },
     //跳转到详情页面
-    toDetail(title){
+    toDetail(username,title){
       this.$router.push({
         path: '/detailblog',
         query: {
-          username: this.$store.state.token.username,
+          username,
           title
         }
       })
@@ -108,7 +119,7 @@ export default {
   padding: 10px;
   border-bottom: 1px solid rgb(245,246,247);
 }
-.list_item>div{
+.list_item>div:not(.bl_text){
   display: inline-block;
 }
 .list_item:hover{

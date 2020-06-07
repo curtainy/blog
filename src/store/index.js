@@ -48,9 +48,6 @@ const mutations = {
   load(state){
     state.token = getToken()
     state.isLoad = true
-    // myBlog({username:state.token.username}).then((data) => {
-    //   state.myBlog = data.data
-    // })
   },
   //添加博客
   addBlog(state,blog){
@@ -100,6 +97,14 @@ const mutations = {
     state.allBlog.forEach(blog => {
       if(blog.username === payload.username && blog.title === payload.title){
         blog.comment[payload.index].response.push(payload.comment)
+      }
+    })
+  },
+  //增加博客访问量
+  addBrowse(state,payload){
+    state.allBlog.forEach(blog => {
+      if(blog.username == payload.username && blog.title == payload.title){
+        blog.browse++
       }
     })
   }
