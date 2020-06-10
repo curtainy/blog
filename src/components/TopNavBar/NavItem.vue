@@ -1,8 +1,7 @@
 <template>
   <div class="nav-item"> 
     <div v-for="(item,index) in navList" :key="index"
-         class="item" @click="itemClick(index)"         
-    >
+         class="item" @click="itemClick(index)">
      <span :class="{actived:currentIndex===index}">{{item}}</span>
     </div>
   </div>
@@ -31,7 +30,8 @@ export default {
         case 0: this.$router.push('/article'); break;
         case 1: this.$router.push('/request'); break;
         case 2: this.$router.push('/creation'); break;
-        case 3: this.$router.push('/member'); break;
+        case 3: this.$router.push('/myblog'); break;
+        case 4: this.$router.push('/profile');break;
         default:
       }
     }
@@ -41,19 +41,17 @@ export default {
 
 <style>
 .nav-item{
-  width: 400px;
   height: 100%;
-
-  display: flex;
-  align-items: center;
 }
 .item{
-  flex: 1;
-  line-height: 100%;
-  text-align: center;
+  height: 100%;
+  padding: 0 20px;
+  line-height: 50px;
+  display: inline-block;
+  cursor: pointer;
 }
 .actived{
-  border-bottom: 2px solid gray;
+  border-bottom: 2px solid gainsboro;
 }
 .item span{
   padding: 10px;

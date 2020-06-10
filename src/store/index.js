@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getToken } from 'network/storage'
+import { getToken,updateToken } from 'network/storage'
 import { noPubBlog ,allBlog } from 'network/blog'
+
 
 
 Vue.use(Vuex)
@@ -29,6 +30,7 @@ if(getToken().username != undefined){
 }
 
 const getters = {
+  //当前用户的博客
   getMyBlog(state){
     const myBlog = state.allBlog.filter(blog => {
       return blog.username === state.token.username
@@ -36,6 +38,7 @@ const getters = {
     return myBlog
   }
 }
+
 
 const mutations = {
   //退出登录
@@ -106,6 +109,17 @@ const mutations = {
       if(blog.username == payload.username && blog.title == payload.title){
         blog.browse++
       }
+    })
+  },
+  //修改头像
+  updateHeadImg(state,newHeadImg){
+    //(1)修改浏览器中的token
+    updateToken(newHeadImg)
+    //(2)修改store中的token
+    state.token.headImg = newHeadImg
+    //(3)修改博客中的headImg
+    state.allBlog.forEach(blog => {
+      if(blog.username == state.token.username) blog.headImg = newHeadImg
     })
   }
 }

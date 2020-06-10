@@ -124,18 +124,21 @@ export default {
   top: 6px;
 }
 .user>.input,.pass>.input{
-  height: 28px;
+  height: 29px;
   width: 255px;
-  /* margin-top: 0; */
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   border: 0px solid gainsboro;
   padding-left: 5px;
 }
+.user>.input{
+  position: relative;
+  top: 1px;
+}
 .sumbit{
   line-height: 30px;
   color: white;
-  background-color: rgb(0,122,204,0.7);
+  background-color: rgba(102,154,58);
   font-size: 15px;
   margin-top: 20px;
 }

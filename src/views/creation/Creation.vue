@@ -29,7 +29,7 @@
         <div class="category">分类</div>
         <el-select v-model="category" multiple placeholder="分类" class="more_choose">
           <el-option
-            v-for="(item,index) in tagList"
+            v-for="(item,index) in categoryList"
             :key="index"
             :label="item"
             :value="item">
@@ -56,6 +56,7 @@ export default {
     return {
       typeList: ['原创','转载'],
       tagList: ['数据库','前端','后端','运维','大数据','人工智能','算法','其他'],
+      categoryList: ['前端','大数据','人工智能','后台','Android','ios','产品','运营','数据结构与算法','操作系统','数据库','其他'],
       type: '',
       title: '',
       category: [],

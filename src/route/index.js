@@ -6,10 +6,10 @@ vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    redirect: '/allblog'
+    redirect: '/article'
   },
   {
-    path: '/allblog',
+    path: '/article',
     component: () => import('views/allblog/AllBlog')
   },
   {
@@ -19,10 +19,6 @@ const routes = [
   {
     path: '/request',
     component: () => import('views/request/Request')
-  },
-  {
-    path: '/member',
-    component: () => import('views/member/Member')
   },
   {
     path: '/login',

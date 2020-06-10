@@ -8,6 +8,7 @@
 
 import BlogList from 'components/bloglist/BlogList'
 
+
 export default {
   components: {
     BlogList

@@ -141,7 +141,7 @@ export default {
   height: 30px;
   line-height: 30px;
   color: white;
-  background-color: rgb(0,122,204,0.7);
+  background-color: rgba(102,154,58);
   font-size: 15px;
 }
 </style>

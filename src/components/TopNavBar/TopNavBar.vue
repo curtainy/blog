@@ -17,13 +17,8 @@
     </div>
     <div class="load" v-if="$store.state.isLoad">
       <img :src="$store.state.token.headImg">
-      <div class="user" @mouseenter="show">{{$store.state.token.username}}</div>
-      <div class="droplist" v-show="isShow" @mouseleave="hidden">
-        <div v-for="(item,index) in chooseList" :key="index"
-              @click="handleChoose(index)" :class="{active:currentIndex == index}">
-          {{item}}
-        </div>
-      </div>
+      <div class="user">{{$store.state.token.username}}</div>
+      <div class="quit" @click="quit">退出登录</div>
     </div>
   </div>
 </template>
@@ -38,10 +33,8 @@ export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','VIP会员'],
-      chooseList: ['我的博客','个人中心','退出登录'],
+      navList: ['博客','问答','创作','我的博客','个人中心'],
       currentIndex: 0,
-      isShow: false
     }
   },
   components: {
@@ -54,19 +47,11 @@ export default {
     registerBtn(){
       this.$router.push('/register')
     },
-    show(){
-      this.isShow = true
-    },
-    hidden(){
-      this.isShow = false
-    },
-    handleChoose(index){
-      this.currentIndex = index
-      switch(index){
-        case 0: this.$router.push('/myblog'); break;
-        case 1: this.$router.push('/editmessage'); break;
-        case 2: removeToken(); this.$store.commit('quit'); break;
-        default:
+    quit(){
+      var bool = window.confirm('确认退出？')
+      if(bool){
+        removeToken() 
+        this.$store.commit('quit')
       }
     }
   }
@@ -90,10 +75,9 @@ export default {
   height: 100%;
 }
 .icon{
-  width: 300px;
+  width: 200px;
 }
 .icon>img{
-  margin:0 10px 0 40px;
   height: 100%;
 }
 .icon>div{
@@ -106,7 +90,7 @@ export default {
 
 .search{
   width: 300px;
-  margin: 0 50px;
+  margin: 0 30px;
 }
 .search>.input{
   margin-top: 5px;
@@ -131,21 +115,16 @@ export default {
   display: inline-block;
   position: relative;
   top: -20px;
+  margin-right: 20px;
+}
+.quit{
+  display: inline-block;
+  padding: 5px;
+  background: rgba(102,154,58);
+  border-radius: 5px;
+  position: relative;
+  top: -20px;
   margin-right: 10px;
-}
-.droplist{
-  position: fixed;
-  top: 50px;
-  right: 100px;
-  width: 100px;
-}
-.droplist>div{
-  width: 100%;
-  text-align: center;
-  padding: 10px 0;
-  background: rgb(48,64,70);
-}
-.active{
-  color: rgb(151,248,70);
+  cursor: pointer;
 }
 </style>
