@@ -126,7 +126,6 @@ export default {
 .list{
   padding: 15px;
   border-bottom: 1px solid rgb(245,246,247);
-  margin-top: 15px;
 }
 .bl_username{
   position: relative;

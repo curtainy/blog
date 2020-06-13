@@ -43,6 +43,10 @@ const routes = [
   {
     path: '/detailblog',
     component: () => import('components/detailblog/DetailBlog')
+  },
+  {
+    path: '/search/:input',
+    component: () => import('views/search/Search')
   }
 ]
 

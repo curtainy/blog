@@ -5,7 +5,7 @@
         <div>BLOG</div>
     </div>
     <nav-item :navList="navList" class="items"/>
-    <div class="demo-input-suffix search">
+    <div class="demo-input-suffix search" @keyup="search">
             <el-input placeholder="请输入内容"  v-model="input" class="input">
               <i slot="prefix" class="el-input__icon el-icon-search search-icon"></i>
             </el-input>
@@ -26,14 +26,13 @@
 <script>
 
 import NavItem from './NavItem'
-
 import { removeToken } from 'network/storage'
 
 export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','我的博客','个人中心'],
+      navList: ['博客','论坛','创作','我的博客','个人中心'],
       currentIndex: 0,
     }
   },
@@ -52,6 +51,12 @@ export default {
       if(bool){
         removeToken() 
         this.$store.commit('quit')
+      }
+    },
+    search(e){
+      if(e.keyCode === 13){//enter键按下
+        this.$router.push('/search/'+this.input)
+        this.input = ''
       }
     }
   }

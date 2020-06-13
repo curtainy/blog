@@ -1,6 +1,6 @@
 <template>
   <div id="all_blog">
-    <blog-list :blogList="$store.state.allBlog"/>
+    <blog-list :blogList="this.$store.state.allBlog"/>
   </div>
 </template>
 

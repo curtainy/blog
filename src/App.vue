@@ -3,7 +3,7 @@
     <top-nav-bar/>
     <change-bg @changeBg="changeBg"/>
     <div class="article" :class="{day:isDay,dark:!isDay}">
-      <keep-alive exclude="DetailBlog,ModifyBlog">
+      <keep-alive :exclude="noCache">
         <router-view/>
       </keep-alive>
     </div>
@@ -19,7 +19,8 @@ export default {
   name: 'App',
   data(){
     return {
-       isDay: true   //日间模式
+       isDay: true,   //日间模式
+       noCache: ['DetailBlog','ModifyBlog','Search']
     }
   },
   components: {

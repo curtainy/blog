@@ -57,6 +57,7 @@ export default {
   },
   created(){
     const {username,title} = this.$route.query
+    console.log('111')
     // console.log({username,title})
     var blog = ''
     //获取博客内容
@@ -68,9 +69,9 @@ export default {
     this.content = marked(this.blog.content)
     //博客访问量+1
     addBrowse({username,title}).then(data => {
-      console.log(data)
+      // console.log(data)
       if(data.code == 0){
-        console.log('success')
+        // console.log('success')
         this.$store.commit('addBrowse',{username,title})
       }
     })

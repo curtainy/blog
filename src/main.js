@@ -14,6 +14,8 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(VueHighlightJS)
 
+Vue.prototype.$bus = new Vue()
+
 Vue.directive('highlight', (el) => {
   let blocks = el.querySelectorAll('pre code')
   blocks.forEach((block) => {

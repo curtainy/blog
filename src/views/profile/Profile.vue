@@ -61,7 +61,7 @@
 
 <script>
 
-import { getProfile, updateUser, updateHeadImg } from 'network/user'
+import { getProfile, updateUser } from 'network/user'
 import NoLoad from 'components/noload/NoLoad'
 import { mapGetters } from 'vuex'
 
@@ -109,13 +109,13 @@ export default {
     getImgUrl(url){
       this.user.headImg = url
       //更新数据库中信息
-      console.log(url === this.$store.state.token.headImg)
-      updateHeadImg({username: this.user.username,newHeadImg:url})
-      .then(data => {
-        console.log(data)
-      })
-      //更新store中的信息
-      // this.$store.commit('updateHeadImg',url)
+      // updateHeadImg({username: this.user.username,newHeadImg:url})
+      // .then(data => {
+      //   if(data.code === 0){
+      //     //更新store中的信息
+      //     this.$store.commit('updateHeadImg',url)
+      //   }
+      // })
     },
     editBtn(){
       this.edit = !this.edit
@@ -176,7 +176,7 @@ export default {
 .pro_msg{
   display: inline-block;
   padding: 14px 0;
-  width: calc(100% - 0px);
+  width: 85%;
   padding-left: 150px;
 } 
 .msg_top>div,.msg_bottom>div{
