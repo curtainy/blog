@@ -4,26 +4,23 @@
       <img src="~assets/img/answer.jpg">
       <div class="request" @click="addRequest"></div>
     </div>
-    <div v-if="!QAList.length" class="noData">暂时还没有问答，快点击上方我要提问提出自己的问题吧~</div> 
-    <!-- <div class="request_item" v-for="(item,index) in QAList" :key="index">
+    <div v-if="!$store.state.QAList.length" class="noData">暂时还没有问答，快点击上方我要提问提出自己的问题吧~</div> 
+    <div v-else class="request_item" v-for="(item,index) in $store.state.QAList" :key="index">
       <div>
-        <span>{{item.date | date}}</span>
+        <span class="req_time">{{item.date | date}}来自 </span>
+        <span class="reqer">{{item.username}}</span>
       </div>
-    </div> -->
+      <div class="req_title">{{item.title}}</div>
+      <div class="req_content">{{item.reqContent | articleText}}</div>
+      <div class="req_tag" v-for="(tag,index) in item.tag" :key="index">{{tag}}</div>
+      <div class="ans_num"><span>回答</span><span>{{item.answer.length}}</span></div>
+    </div>
   </div>
 </template>
 
 <script>
 
 export default {
-  data(){
-    return {
-      QAList: []
-    }
-  },
-  created(){
-    this.QAList = this.$store.state.QAList
-  },
   methods:{
     addRequest(){
       this.$router.push('/request')
@@ -74,5 +71,57 @@ export default {
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
+  border-bottom: 1px solid rgb(245,246,247);
+  position: relative;
+}
+.request_item:hover{
+  background: rgba(229,229,229,.5);
+}
+.request_item>div{
+  margin-bottom: 7px;
+}
+.req_time{
+  font-size: 15px;
+  color: rgb(152,154,170);
+}
+.reqer{
+  font-size: 15px;
+  color: rgb(73,156,214);
+}
+.req_title{
+  font-size: 18px;
+  cursor: pointer;
+}
+.req_content{
+  width: 90%;
+  color: rgb(152,154,170);
+  font-size: 14px;
+  margin-bottom: 10px;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.req_tag{
+  display: inline-block;
+  background: rgb(230,230,230);
+  padding: 5px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: rgb(128,100,135);
+  margin-right: 10px;
+}
+.ans_num{
+  width: 40px;
+  height: 40px;
+  background: rgba(102,154,58,0.7);
+  color: white;
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+  position: absolute;
+  right: 20px;
+  top: 60px;
 }
 </style>

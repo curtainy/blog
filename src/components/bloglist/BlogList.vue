@@ -32,8 +32,6 @@
 
 <script>
 
-import marked from 'marked'
-import { dateFormat } from 'common/util'
 import { cancelBlog, saveToPub } from 'network/blog'
 
 export default {
@@ -58,20 +56,6 @@ export default {
         })
         return count
       }
-    }
-  },
-  filters: {
-    articleText(input){
-      //转为html
-      var html = marked(input)
-      //转为string类型
-      var str = html.toString()
-      //使用正则表达式将标签删除
-      var res = str.replace(/<.*?>/gi,'')
-      return res
-    },
-    date(input){
-      return dateFormat(input)
     }
   },
   methods: {
@@ -138,7 +122,7 @@ export default {
 }
 .list:hover{
    color: rgba(102,154,58);
-   background: rgba(229,229,229,.2);
+   background: rgba(229,229,229,.5);
 }
 .bl_headImg{
   width: 40px;
