@@ -9,6 +9,7 @@
 import BlogList from 'components/bloglist/BlogList'
 
 export default {
+  name: 'Search',
    data(){
     return {
       blogList: [],

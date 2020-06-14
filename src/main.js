@@ -23,6 +23,23 @@ Vue.directive('highlight', (el) => {
   })
 })
 
+import marked from 'marked'
+import { dateFormat } from 'common/util'
+
+Vue.filter('articleText',(input) => {
+    //转为html
+    var html = marked(input)
+    //转为string类型
+    var str = html.toString()
+    //使用正则表达式将标签删除
+    var res = str.replace(/<.*?>/gi,'')
+    return res
+})
+
+Vue.filter('date',(input) => {
+  return dateFormat(input)
+})
+
 new Vue({
   router,
   store,

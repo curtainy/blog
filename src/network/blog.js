@@ -95,14 +95,3 @@ export function addBrowse(data){
   })
 }
 
-//查询博客
-export function searchBlog(input){
-  return request({
-    headers: {
-      'Content-Type': 'application/x-www-form-encoded'
-    },
-    url: '/searchblog',
-    method: 'post',
-    data: input
-  })
-}

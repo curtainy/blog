@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import { getToken,updateToken } from 'network/storage'
 import { noPubBlog ,allBlog } from 'network/blog'
+import { getAllQA } from 'network/QA'
 
 
 
@@ -12,12 +13,17 @@ const state = {
   token: {},
   isLoad: false,
   allBlog: [],
-  noPubBlog: []
+  noPubBlog: [],
+  QAList: []
 }
 
 //获取所有博客
-allBlog().then((data) => {
+allBlog().then(data => {
   state.allBlog = data.data
+})
+//获取所有问答
+getAllQA().then(data =>{
+  state.QAList = data.data
 })
 
 //用户登录状态
@@ -121,6 +127,10 @@ const mutations = {
     state.allBlog.forEach(blog => {
       if(blog.username == state.token.username) blog.headImg = newHeadImg
     })
+  },
+  //提交问题
+  addRequest(state,data){
+    this.state.QAList.push(data)
   }
 }
 

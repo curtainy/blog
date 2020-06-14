@@ -52,6 +52,7 @@ export default {
   width: 70%;
   margin-left: 15%;
   padding-top: 30px;
+  border-radius: 5px;
 }
 .my_blog>.user>span{
   color: rgba(102,154,58);

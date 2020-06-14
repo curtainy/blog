@@ -17,8 +17,12 @@ const routes = [
     component: () => import('views/creation/Creation')
   },
   {
+    path: '/QA',
+    component: () => import('views/QA/QA')
+  },
+  {
     path: '/request',
-    component: () => import('views/request/Request')
+    component: () => import('views/QA/Request')
   },
   {
     path: '/login',
