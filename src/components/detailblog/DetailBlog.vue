@@ -26,7 +26,6 @@
 import marked from 'marked'
 import CommentList from 'components/comment/CommentList'
 import {mapGetters} from 'vuex'
-import { dateFormat } from 'common/util'
 import { publishComment, addBrowse } from 'network/blog'
 
 export default {
@@ -57,7 +56,6 @@ export default {
   },
   created(){
     const {username,title} = this.$route.query
-    console.log('111')
     // console.log({username,title})
     var blog = ''
     //获取博客内容
@@ -75,11 +73,6 @@ export default {
         this.$store.commit('addBrowse',{username,title})
       }
     })
-  },
-  filters: {
-    date(input){
-      return dateFormat(input)
-    }
   },
   methods: {
     //发表评论

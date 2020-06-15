@@ -5,15 +5,20 @@
       <div class="request" @click="addRequest"></div>
     </div>
     <div v-if="!$store.state.QAList.length" class="noData">暂时还没有问答，快点击上方我要提问提出自己的问题吧~</div> 
-    <div v-else class="request_item" v-for="(item,index) in $store.state.QAList" :key="index">
-      <div>
-        <span class="req_time">{{item.date | date}}来自 </span>
-        <span class="reqer">{{item.username}}</span>
-      </div>
-      <div class="req_title">{{item.title}}</div>
-      <div class="req_content">{{item.reqContent | articleText}}</div>
-      <div class="req_tag" v-for="(tag,index) in item.tag" :key="index">{{tag}}</div>
-      <div class="ans_num"><span>回答</span><span>{{item.answer.length}}</span></div>
+    <div v-else>
+        <!-- <div class="sort">
+          <div> 按</div>
+        </div> -->
+        <div class="request_item" v-for="(item,index) in $store.state.QAList" :key="index">
+          <div>
+            <span class="req_time">{{item.date | date}}来自 </span>
+            <span class="reqer">{{item.username}}</span>
+          </div>
+          <div class="req_title" @click="reqDetail(item.title)">{{item.title}}</div>
+          <div class="req_content">{{item.reqContent | articleText}}</div>
+          <div class="req_tag" v-for="(tag,index) in item.tag" :key="index">{{tag}}</div>
+          <div class="ans_num"><span>回答</span><span>{{item.answer.length}}</span></div>
+        </div>
     </div>
   </div>
 </template>
@@ -24,6 +29,9 @@ export default {
   methods:{
     addRequest(){
       this.$router.push('/request')
+    },
+    reqDetail(title){
+      this.$router.push('/reqdetail/'+title)
     }
   }
 }
@@ -58,6 +66,7 @@ export default {
   border-radius: 5px;
   background: transparent;
   z-index: 10;
+  cursor: pointer;
 }
 .noData{
   width: 100%;
@@ -70,7 +79,7 @@ export default {
 .request_item{
   box-sizing: border-box;
   width: 100%;
-  padding: 10px;
+  padding: 20px;
   border-bottom: 1px solid rgb(245,246,247);
   position: relative;
 }
@@ -94,7 +103,7 @@ export default {
 }
 .req_content{
   width: 90%;
-  color: rgb(152,154,170);
+  color: rgb(127,127,127);
   font-size: 14px;
   margin-bottom: 10px;
 

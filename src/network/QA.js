@@ -17,3 +17,14 @@ export function addRequest(data){
     data
   })
 }
+
+export function addAnswer(data){
+  return request({
+    headers: {
+      'Content-Type':'application/x-www-form-urlencoded'
+    },
+    url: '/addanswer',
+    method: 'post',
+    data
+  })
+}

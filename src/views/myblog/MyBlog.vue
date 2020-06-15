@@ -2,7 +2,7 @@
   <div id="my_blog">
     <no-load v-if="!this.$store.state.isLoad"/>
     <div class="my_blog" v-else>
-      <div class="user">
+      <div class="mb_user">
         <span>{{$store.state.token.username}}的博客</span>
         <input type="radio" value="1" v-model="type"><label>已发布</label>
         <input type="radio" value="2" v-model="type"><label>草稿箱</label>
@@ -41,7 +41,6 @@ export default {
     type(){
       if(this.type == '1') this.blogList = this.getMyBlog
       else this.blogList = this.$store.state.noPubBlog
-      // console.log(this.blogList)
     }
   }
 }
@@ -50,22 +49,29 @@ export default {
 <style>
 #my_blog{
   width: 70%;
+  min-height: calc(100vh - 80px);
+  background: white;
+  margin-top: 20px;
   margin-left: 15%;
-  padding-top: 30px;
-  border-radius: 5px;
+  border-radius: 3px;
+  overflow: hidden;
 }
-.my_blog>.user>span{
+.mb_user{
+  padding: 20px 0 20px 20px;
+  border-bottom: 1px solid rgb(230,230,230);
+}
+.mb_user>span{
   color: rgba(102,154,58);
-  font-size: 25px;
-  margin: 0 80px 20px 0;
+  font-size: 20px;
+  margin-right: 50px;
 }
-.my_blog>.user>input{
+.mb_user>input{
   margin-left: 20px;
 }
-.my_blog>.user>label{
-  color: gray;
-  font-size: 14px;
+.mb_user>label{
   margin-left: 5px;
+  color: rgb(128,100,135);
+  font-size: 15px;
 }
 .mb_list{
   min-height: 500px;

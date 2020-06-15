@@ -20,7 +20,7 @@ export default {
   data(){
     return {
        isDay: true,   //日间模式
-       noCache: ['DetailBlog','ModifyBlog','Search']
+       noCache: ['DetailBlog','ModifyBlog','Search','ReqDetail']
     }
   },
   components: {
@@ -45,7 +45,7 @@ export default {
   overflow-y: scroll; 
 }
 .day{
-  background-image: url("assets/img/daybg.jpg");
+  background-image: url("assets/img/daybg1.jpg");
 }
 .dark{
   background-image: url("assets/img/darkbg.jpg");

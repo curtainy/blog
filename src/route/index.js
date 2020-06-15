@@ -25,6 +25,10 @@ const routes = [
     component: () => import('views/QA/Request')
   },
   {
+    path: '/reqdetail/:title',
+    component: () => import('views/QA/ReqDetail')
+  },
+  {
     path: '/login',
     component: () => import('views/login/Login')
   },

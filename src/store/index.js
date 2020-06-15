@@ -97,7 +97,7 @@ const mutations = {
   publishComment(state,payload){
     state.allBlog.forEach(blog => {
       if(blog.username === payload.username && blog.title === payload.title){
-        blog.comment.push(payload.comment)
+        blog.answer.push(payload.answer)
       }
     })
   },
@@ -131,6 +131,14 @@ const mutations = {
   //提交问题
   addRequest(state,data){
     this.state.QAList.push(data)
+  },
+  //提交答案
+  addAnswer(state,payload){
+    for(let i = 0; i < state.QAList.length; i++){
+      if(state.QAList[i].username == payload.username && this.state.QAList[i].title == payload.title){
+        state.QAList[i].answer.push(payload.answer)
+      }
+    }
   }
 }
 

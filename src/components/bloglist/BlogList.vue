@@ -108,8 +108,8 @@ export default {
 
 <style>
 .list{
-  padding: 15px;
-  border-bottom: 1px solid rgb(245,246,247);
+  padding: 20px;
+  border-bottom: 1px solid rgb(230,230,230);
 }
 .bl_username{
   position: relative;
