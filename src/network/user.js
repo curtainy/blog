@@ -51,7 +51,7 @@ export function updateHeadImg(data){
     headers: {
       "Content-Type":"application/x-www-form-urlencoded"
     },
-    url: "/updateHeadImg",
+    url: "/updateHeadimg",
     method: 'post',
     data
   })

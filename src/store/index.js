@@ -19,11 +19,21 @@ const state = {
 
 //获取所有博客
 allBlog().then(data => {
+  //data.data.headImg = data.data.headImg.replace(/\s/g,'+')
   state.allBlog = data.data
+  state.allBlog.forEach(blog => {
+    blog.headImg = blog.headImg.replace(/\s/g,'+')
+  })
 })
 //获取所有问答
 getAllQA().then(data =>{
   state.QAList = data.data
+  
+  state.QAList.forEach(qa => {
+    qa.answer.forEach(answer => {
+      answer.headImg = answer.headImg.replace(/\s/g,'+')
+    })
+  })
 })
 
 //用户登录状态

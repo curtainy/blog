@@ -35,7 +35,7 @@ export default {
       answerContent: ''
     }
   },
-  created(){
+  mounted(){
     const title = this.$route.params.title
     const QAList = this.$store.state.QAList
     for(let i = 0; i < QAList.length; i++){

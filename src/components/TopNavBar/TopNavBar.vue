@@ -32,7 +32,7 @@ export default {
   data(){
     return {
       input: '',
-      navList: ['博客','论坛','创作','我的博客','个人中心'],
+      navList: ['博客','问答','创作','我的博客','个人中心'],
       currentIndex: 0,
     }
   },

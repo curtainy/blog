@@ -23,6 +23,6 @@ export default {
   background: white;
   margin-top: 20px;
   margin-left: 15%;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 </style>
