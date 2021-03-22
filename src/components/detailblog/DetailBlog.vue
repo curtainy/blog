@@ -26,7 +26,7 @@
 import marked from 'marked'
 import CommentList from 'components/comment/CommentList'
 import {mapGetters} from 'vuex'
-import { publishComment, addBrowse } from 'network/blog'
+// import { publishComment, addBrowse } from 'network/blog'
 
 export default {
   name: 'DetailBlog',
@@ -56,7 +56,6 @@ export default {
   },
   created(){
     const {username,title} = this.$route.query
-    // console.log({username,title})
     var blog = ''
     //获取博客内容
     if(username == this.$store.state.token.username) blog = this.getMyBlog
@@ -66,13 +65,11 @@ export default {
     })
     this.content = marked(this.blog.content)
     //博客访问量+1
-    addBrowse({username,title}).then(data => {
-      // console.log(data)
-      if(data.code == 0){
-        // console.log('success')
+    // addBrowse({username,title}).then(data => {
+    //   if(data.code == 0){
         this.$store.commit('addBrowse',{username,title})
-      }
-    })
+    //  }
+   // })
   },
   methods: {
     //发表评论
@@ -91,30 +88,30 @@ export default {
         }
 
         if(this.type){ //发表评论
-          const payload = {username:comment.username,title:title,comment}
-          publishComment(payload)
-          .then((data) => {
-            if(data.code === 0){
+          const payload = {username:this.blog.username,title:title,comment}
+          // publishComment(payload)
+          // .then((data) => {
+          //   if(data.code === 0){
+               //清空评论中内容
+              this.commentConent = ''
               //弹窗
-              this.$message({type: 'success', message: data.msg})
+             // this.$message({type: 'success', message: data.msg})
               //修改store中的allBlog
               this.$store.commit('publishComment',payload)
-              //清空评论中内容
-              this.commentConent = ''
-            }
-          })
+          //   }
+          // })
         }else{ //回复评论
           delete comment.response
-          const payload = {username:comment.username,title,index:this.resIndex,comment}
-          publishComment(payload).then(data => {
-            if(data.code === 0){
-              this.$message({type: 'success',message: data.msg})
+          const payload = {username:this.blog.username,title,index:this.resIndex,comment}
+          // publishComment(payload).then(data => {
+          //   if(data.code === 0){
+          //     this.$message({type: 'success',message: data.msg})
               //修改store
               this.$store.commit('responseComment',payload)
               this.commentConent = ''
               this.type = true
-            }
-          })
+          //   }
+          // })
         }
       }
     },
@@ -128,7 +125,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .detail_blog{
   width: 70%;
   margin-left: 15%;
@@ -154,8 +151,9 @@ export default {
   padding: 5px;
   display: inline-block;
   font-size: 14px;
-  background: rgba(151,248,70,0.3);
-  color: rgba(102,154,58);
+  background: #a3ccf5;
+  /* color: #409EFF; */
+  color: #fff;
   border-radius: 2px;
   margin: 2px 10px 0 1px;
 }
@@ -186,7 +184,7 @@ textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   height: 35px;
   line-height: 35px;
   text-align: center;
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
   position: relative;
   top: -10px;

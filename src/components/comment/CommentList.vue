@@ -49,7 +49,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .comment_item{
   padding: 10px 0;
   border-bottom: 1px solid gainsboro;
@@ -75,6 +75,6 @@ export default {
 }
 .res{
   margin-left: 10px;
-  color: rgba(102,154,58);
+  color: #409EFF;
 }
 </style>

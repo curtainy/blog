@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #search{
   width: 70%;
   min-height: calc(100vh - 80px);

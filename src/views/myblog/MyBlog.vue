@@ -8,7 +8,8 @@
         <input type="radio" value="2" v-model="type"><label>草稿箱</label>
       </div>
       <div class="mb_list">
-        <blog-list :blogList="blogList" :isShow="true"/>
+        <blog-list :blogList="blogList" :isShow="true" 
+                   @cancel="cancelBlog" @publish="publishBlog"/>
       </div>
     </div>
   </div>
@@ -17,6 +18,7 @@
 <script>
 
 import {mapGetters} from 'vuex'
+// import { cancelBlog, saveToPub } from 'network/blog'
 import BlogList from 'components/bloglist/BlogList'
 import NoLoad from 'components/noload/NoLoad'
 
@@ -42,11 +44,36 @@ export default {
       if(this.type == '1') this.blogList = this.getMyBlog
       else this.blogList = this.$store.state.noPubBlog
     }
+  },
+  methods: {
+    cancelBlog(title){
+      //cancelBlog({username:this.$store.state.token.username,title:title})
+       // .then((data) => {
+          this.$store.commit('cancelBlog',title)
+          this.blogList = this.getMyBlog
+      //     this.$message({
+      //       type: 'success',
+      //       message: data.msg
+      //     })
+      // })
+    },
+    publishBlog(username,title){
+      //修改数据库中内容
+      // saveToPub({username,title}).then((data) => {
+      //   console.log(data)
+      //   this.$message({
+      //     type: 'success',
+      //     message: data.msg
+      //   })
+        //修改store中数据
+        this.$store.commit('saveToPub',title)
+      //})
+    }
   }
 }
 </script>
 
-<style>
+<style scoped>
 #my_blog{
   width: 70%;
   min-height: calc(100vh - 80px);
@@ -61,7 +88,7 @@ export default {
   border-bottom: 1px solid rgb(230,230,230);
 }
 .mb_user>span{
-  color: rgba(102,154,58);
+  color: #409EFF;
   font-size: 20px;
   margin-right: 50px;
 }

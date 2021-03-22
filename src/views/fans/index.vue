@@ -1,23 +1,15 @@
 <template>
-  <div id="all_blog">
-    <blog-list :blogList="this.$store.state.allBlog"/>
-  </div>
+  <div id="fans">fans</div>
 </template>
 
 <script>
-
-import BlogList from 'components/bloglist/BlogList'
-
-
 export default {
-  components: {
-    BlogList
-  }
+
 }
 </script>
 
-<style scoped>
-#all_blog{
+<style>
+#fans {
   width: 70%;
   min-height: calc(100vh - 80px);
   background: white;

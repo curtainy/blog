@@ -28,10 +28,9 @@ export default {
       this.currentIndex = index
       switch(index){
         case 0: this.$router.push('/article'); break;
-        case 1: this.$router.push('/QA'); break;
-        case 2: this.$router.push('/creation'); break;
-        case 3: this.$router.push('/myblog'); break;
-        case 4: this.$router.push('/profile');break;
+        case 1: this.$router.push('/creation'); break;
+        case 2: this.$router.push('/fans'); break;
+        case 3: this.$router.push('/personal');break;
         default:
       }
     }
@@ -39,7 +38,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .nav-item{
   height: 100%;
 }

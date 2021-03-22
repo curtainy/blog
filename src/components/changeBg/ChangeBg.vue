@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .change-bg{
   height: 160px;
   width: 70px;

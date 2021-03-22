@@ -2,7 +2,7 @@
   <div class="blog_list">
     <div v-for="(item,index) in blogList" :key="index" class="list">
         <div class="test" v-show="!isShow">
-          <img :src="item.headImg" class="bl_headImg">
+          <img :src="item.avatorUrl" class="bl_headImg">
           <span class="bl_username">{{item.username}}</span>
         </div>
         <div class="list_item">
@@ -13,7 +13,7 @@
         <div class="bl_time">{{item.date | date}}</div> 
         <div class="bl_comment">
           <i class="el-icon-chat-line-round"></i>
-          <span>{{getLength(item.comment)}}</span>
+          <span>{{getLength(item.comment)}}</span> 
         </div>
         <div class="bl_browse">
           <i class="el-icon-view"></i>
@@ -25,14 +25,12 @@
           <span class="cancel" @click="handleCancel(item.title)">删除</span>
         </div>
         </div>
-        
     </div>
   </div>
 </template>
 
 <script>
 
-import { cancelBlog, saveToPub } from 'network/blog'
 
 export default {
   props: {
@@ -49,10 +47,10 @@ export default {
   },
   computed: {
     getLength(){
-      return function(arr){
+       return function(arr){
         let count = arr.length
         arr.forEach(item => {
-          count += item.response.length
+          item.response && (count += item.response.length)
         })
         return count
       }
@@ -67,30 +65,14 @@ export default {
     handleCancel(title){
       const bool = window.confirm('一旦删除不可恢复，确认删除吗？')
       if(bool){
-        cancelBlog({username:this.$store.state.token.username,title:title})
-        .then((data) => {
-          console.log(data)
-          //在store中删除该博客
-          this.$store.commit('cancelBlog',title)
-          this.$message({
-            type: 'success',
-            message: data.msg
-          })
-        })
+        //告诉父组件要删除博客
+         console.log(title)
+        this.$emit('cancel',title)
       }
     },
     //发布博客
     handlePublish(username,title){
-      //修改数据库中内容
-      saveToPub({username,title}).then((data) => {
-        console.log(data)
-        this.$message({
-          type: 'success',
-          message: data.msg
-        })
-        //修改store中数据
-        this.$store.commit('saveToPub',title)
-      })
+      this.$emit('publish',username,title)
     },
     //跳转到详情页面
     toDetail(username,title){
@@ -106,7 +88,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .list{
   padding: 20px;
   border-bottom: 1px solid rgb(230,230,230);
@@ -121,7 +103,7 @@ export default {
   display: inline-block;
 }
 .list:hover{
-   color: rgba(102,154,58);
+   color: #409EFF;
    background: rgba(229,229,229,.5);
 }
 .bl_headImg{
@@ -134,8 +116,10 @@ export default {
   width: 35px;
   height: 20px;
   font-size: 12px;
-  background: rgba(151,248,70,0.3);
-  color: rgba(102,154,58);
+  background: rgba(0,122,204);
+  opacity: 0.3;
+  /* color: gainsboro; */
+  color: #fff;
   border-radius: 3px;
   text-align: center;
   line-height: 20px;
@@ -185,7 +169,7 @@ export default {
   float: left;
 }
 .edit,.pub{
-  color: rgba(102,154,58);
+  color: #409EFF;
   margin-right: 10px;
 }
 .cancel{

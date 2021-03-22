@@ -17,8 +17,8 @@ const routes = [
     component: () => import('views/creation/Creation')
   },
   {
-    path: '/QA',
-    component: () => import('views/QA/QA')
+    path: '/fans',
+    component: () => import('views/fans/index')
   },
   {
     path: '/request',
@@ -30,11 +30,11 @@ const routes = [
   },
   {
     path: '/login',
-    component: () => import('views/login/Login')
+    component: () => import('views/login-demo/Login')
   },
   {
     path: '/register',
-    component: () => import('views/register/Register')
+    component: () => import('views/register/index')
   },
   {
     path: '/myblog',
@@ -45,8 +45,8 @@ const routes = [
     component: () => import('views/modifyblog/ModifyBlog')
   },
   {
-    path: '/profile',
-    component: () => import('views/profile/Profile')
+    path: '/personal',
+    component: () => import('views/personal/index')
   },
   {
     path: '/detailblog',
@@ -55,6 +55,10 @@ const routes = [
   {
     path: '/search/:input',
     component: () => import('views/search/Search')
+  },
+  {
+    path: '/profile',
+    component: () => import('views/profile/Profile')
   }
 ]
 

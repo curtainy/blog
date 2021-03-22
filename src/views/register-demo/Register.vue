@@ -84,7 +84,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #register{
   height: calc(100vh - 50px);
   width: 100%;
@@ -141,7 +141,7 @@ export default {
   height: 30px;
   line-height: 30px;
   color: white;
-  background-color: rgba(102,154,58);
+  background-color: #409EFF;
   font-size: 15px;
 }
 </style>

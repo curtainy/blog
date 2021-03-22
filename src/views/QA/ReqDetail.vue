@@ -1,15 +1,15 @@
 <template>
   <div id="req_detail">
     <h2 class="rd_title">{{request.title}}</h2>
-    <div v-highlight v-html="reqContent"></div>
+    <div v-highlight v-html="getMarked(request.reqContent)"></div>
     <div class="rd_time">编辑于： {{request.date | date}}</div>
     <div class="rd_tag" v-for="(tag,index) in request.tag" :key="index">{{tag}}</div>
     <div class="rd_answer">
-      <div class="answer_num">{{request.answer.length}}个回答</div>
+      <div class="answer_num">{{request.answer&&request.answer.length}}个回答</div>
       <div v-for="(item,index) in request.answer" :key="index" class="answer_item">
         <img :src="item.headImg">
         <span>{{item.username}}</span>
-        <div class="content">{{item.answerContent}}</div>
+        <div class="content"  v-highlight v-html="getMarked(item.answerContent)"></div>
         <div class="time">发布于： {{item.date | date}}</div>
       </div>
     </div>
@@ -23,7 +23,7 @@
 
 import marked from 'marked'
 import { mavonEditor } from 'mavon-editor'
-import { addAnswer } from 'network/QA'
+// import { addAnswer } from 'network/QA'
 import "mavon-editor/dist/css/index.css"
 
 export default {
@@ -31,8 +31,16 @@ export default {
   data(){
     return {
       request: {},
-      reqContent: '',
+     // reqContent: '',
       answerContent: ''
+    }
+  },
+  computed: {
+    getMarked(){
+      return function(str){
+        if(str) return marked(str)
+        else return ''
+      }
     }
   },
   mounted(){
@@ -41,7 +49,7 @@ export default {
     for(let i = 0; i < QAList.length; i++){
       if(QAList[i].title === title){
         this.request = QAList[i]
-        this.reqContent = marked(this.request.reqContent)
+       // this.reqContent = marked(this.request.reqContent)
         break;
       }
     }
@@ -65,13 +73,13 @@ export default {
           title:this.request.title,
           answer
         }
-        addAnswer(answerData).then(data => {
-          if(data.code === 0){
+       // addAnswer(answerData).then(data => {
+        //  if(data.code === 0){
             this.$store.commit('addAnswer',answerData)
             this.answerContent = ''
-            this.$message({type: 'success', message: data.msg})
-          }
-        })
+       //     this.$message({type: 'success', message: data.msg})
+       //   }
+       // })
       }
       
     }
@@ -152,7 +160,7 @@ export default {
   height: 30px;
   width: 8%;
   border-radius: 5px;
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
   text-align: center;
   line-height: 30px;

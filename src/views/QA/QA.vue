@@ -6,9 +6,6 @@
     </div>
     <div v-if="!$store.state.QAList.length" class="noData">暂时还没有问答，快点击上方我要提问提出自己的问题吧~</div> 
     <div v-else>
-        <!-- <div class="sort">
-          <div> 按</div>
-        </div> -->
         <div class="request_item" v-for="(item,index) in $store.state.QAList" :key="index">
           <div>
             <span class="req_time">{{item.date | date}}来自 </span>
@@ -74,7 +71,7 @@ export default {
   text-align: center;
   line-height: 280px;
   font-size: 18px;
-  color: rgba(102,154,58);
+  color: #409EFF;
 }
 .request_item{
   box-sizing: border-box;

@@ -1,152 +1,179 @@
 <template>
-  <div id="login">
-    <form class="login_form">
-      <div class="font">Sign In</div>
-      <div class="user">
-        <div class="up_icon">
-          <i class="el-icon-user"></i>
-        </div>
-        <input type="text" placeholder="username" class="input" v-model.lazy="username">
+  <div class="login">
+      <div>
+        <el-menu :default-active="activeIndex" class="el-menu-demo login-menu" mode="horizontal" @select="handleSelect">
+            <el-menu-item index="0" class="login-item">免密登陆</el-menu-item>
+            <el-menu-item index="1" class="login-item">密码登陆</el-menu-item>
+        </el-menu>
+        <el-form :model="noPass" label-position="left" status-icon label-width="70px" class="demo-ruleForm no-pass" v-if="isPass">
+            <el-form-item label="账号" prop="account">
+                <el-input v-model.number="noPass.account"></el-input>
+            </el-form-item>
+            <el-form-item label="验证码" prop="verificationCode" class="code">
+                <el-input type="password" v-model.number="noPass.verificationCode" autocomplete="off"></el-input>
+                <el-button type="primary" :disabled="isSend" @click="getVerificationCode">{{buttonText}}</el-button>
+            </el-form-item>
+            <el-form-item class="btn">
+                <el-button type="primary" @click="loginNoPass">登陆</el-button>
+            </el-form-item>
+        </el-form>
+        <el-form :model="pass" label-position="left" status-icon label-width="70px" class="demo-ruleForm" v-else>
+            <el-form-item label="账号" prop="account">
+                <el-input v-model.number="pass.account"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password" class="code">
+                <el-input type="password" v-model="pass.password"></el-input>
+            </el-form-item>
+            <el-form-item class="btn">
+                <el-button type="primary" @click="loginByPass">登陆</el-button>
+                <span class="forget" @click="forget">忘记密码</span>
+                <span class="no-account" @click="toRegister">没有账号</span>
+            </el-form-item>
+        </el-form>
       </div>
-      <span v-if="isError">账号或密码错误</span>
-      <div class="pass">
-        <div class="up_icon">
-          <i class="el-icon-lock"></i>
-        </div>
-         <input type="password" placeholder="password" class="input" v-model.lazy="password">
-      </div>
-      <span v-if="isError">账号或密码错误</span>
-      <div class="sumbit" @click="handleSumbit">登录</div>
-      <div class="other_message">
-        <span>忘记密码</span>
-        <span @click="noRegister">还未注册</span>
-      </div>
-    </form>
   </div>
 </template>
 
 <script>
 
-import { login } from 'network/user'
+import { mapMutations } from 'vuex'
+import { login, sendVerificationCode } from 'network/user' 
 import { setToken } from 'network/storage'
 
 export default {
-  data(){
-    return {
-      username: '',
-      password: '',
-      isError: false //账号密码是否正确
-    }
-  },
-  methods: {
-    handleSumbit(){
-      //判断密码是否正确
-      login({username:this.username,password:this.password})
-      .then((data) => {
-        //token存入浏览器
-        setToken(data.data)
-        //跳转到上一页
-        this.$router.back()
-        //导航栏变为登录状态
-        this.$store.commit('load')
-        //弹出成功的消息提示框
-        this.$message({
-          message: '登录成功',
-          type: 'success'
-        })
-      })
+    name: 'login', 
+    data() {
+        return {
+            activeIndex: '0',
+            isPass: true,
+            noPass: {
+                account: '',
+                verificationCode: ''
+            },
+            buttonText: '点击发送验证码',
+            isSend: false,
+            pass: {
+                account: '',
+                password: ''
+            },
+        }
     },
-    //由登录跳转到注册
-    noRegister(){
-      this.$router.push('/register')
+    methods: {
+        ...mapMutations(['changeLoad', 'getUserInfo']),
+        handleSelect(key) {
+            if(key === '0') this.isPass = true
+            else this.isPass = false
+        },
+        getVerificationCode() {
+            this.isSend = true
+            sendVerificationCode({account: this.noPass.account}).then((res) => {
+                if(res.code === '0') {
+                    this.countDown()
+                }
+            })
+        },
+        countDown() {
+            var count = 60
+            var timer = setInterval(() => {
+                if(count !== 1) {
+                    count--
+                    this.buttonText = `${count}s后重新发送`
+                } else {
+                    clearInterval(timer)
+                    this.isSend = false
+                    this.buttonText = '点击发送验证码'
+                }
+            },1000)
+        },
+        loginByPass() {
+            login(Object.assign(this.pass, {
+                role: 'user'
+            })).then((res) => {
+                if(res.code === '0') {
+                    this.changeLoad()
+                    this.getUserInfo(res.data)
+                    this.$message.success('登陆成功')
+                    setToken(res.data)
+                    this.$router.push('/home')
+                } else {
+                    this.$message.success('账号或密码错误')
+                }
+            })
+        },
+        loginNoPass() {
+            login(Object.assign(this.noPass, {
+                role: 'user'
+            })).then((res) => {
+                if(res.code === '0') {
+                    this.changeLoad()
+                    this.getUserInfo(res.data)
+                    this.$message.success('登陆成功')
+                    setToken(res.data)
+                    this.$router.push('/home')
+                } else {
+                    this.$message.success('验证码错误')
+                }
+            })
+        },
+        toRegister() {
+            this.$router.push('/register')
+        },
+        forget() {
+            this.$router.push('/findpassword')
+        }
     }
-  }
 }
 </script>
 
-<style>
-#login{
-  height: calc(100vh - 50px);
-  width: 100%;
-  background-image: url("../../assets/img/login.jpg");
-  background-size: cover;
-  background-position: center center;
+<style lang="less">
+.login {
+    height: 100vh;
+    background: url("~assets/img/bg.jpg");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .btn {
+        .el-button {
+            width: 100% !important;
+        }
+        .forget, .no-account {
+            font-size: 12px;
+            color: rgb(79, 118, 247);
+            cursor: pointer;
+        }
+        .forget{
+            float: right;
+        }
+        .no-account {
+            float: left;
+        }
+    }
 }
-.login_form{
-  height: 300px;
-  width: 400px;
-  border-radius: 3px;
-  background: rgba(204,204,204,0.5);
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%,-50%);
+.login>div{
+    min-width: 500px;
+    margin-top: 5%;
+    width: 25%;
+    padding: 40px;
+    background: #fff;
+    // box-shadow: rgb(212, 209, 209) 0px 0px 10px;
+    border-radius: 3px;
 }
-.login_form>div{
-  position: relative;
-  left: 200px;
-  transform: translateX(-50%);
-  text-align: center;
-
-  height: 30px;
-  width: 300px;
-  border-radius: 3px;
+.login-menu {
+    display: flex;
+    text-align: center;
+    margin-bottom: 50px;
+    .login-item {
+        flex: 1;
+        font-size: 16px;
+    }
 }
-.login_form span{
-  color: red;
-  font-size: 12px;
-  margin-left: 50px;
-}
-.font{
-  padding: 20px 0;
-  text-align: center;
-}
-.login_form.user,.login_form.pass{
-  border: 1px solid gainsboro;
-}
-.pass{
-  margin-top: 20px;
-}
-.up_icon{
-  display: inline-block;
-  width: 39px;
-  height: 31px;
-  background: rgb(246,246,246);
-
-  position: relative;
-  top: -7px;
-
-  border-right: 1px solid gainsboro;
-}
-.up_icon>i{
-  position: relative;
-  top: 6px;
-}
-.user>.input,.pass>.input{
-  height: 29px;
-  width: 255px;
-  border-top-right-radius: 3px;
-  border-bottom-right-radius: 3px;
-  border: 0px solid gainsboro;
-  padding-left: 5px;
-}
-.user>.input{
-  position: relative;
-  top: 1px;
-}
-.sumbit{
-  line-height: 30px;
-  color: white;
-  background-color: rgba(102,154,58);
-  font-size: 15px;
-  margin-top: 20px;
-}
-.other_message>span{
-  color: gray;
-  margin-left: 0;
-}
-.other_message>span:first-child{
-  margin-right: 200px;
+.no-pass {
+    .code {
+        .el-input {
+            width: 57% !important;
+            margin-right: 10px;
+        }
+    }
 }
 </style>

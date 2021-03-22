@@ -18,11 +18,13 @@ const state = {
 }
 
 //获取所有博客
-allBlog().then(data => {
-  //data.data.headImg = data.data.headImg.replace(/\s/g,'+')
-  state.allBlog = data.data
+allBlog().then(res => {
+  state.allBlog = res.data.blogList
   state.allBlog.forEach(blog => {
     blog.headImg = blog.headImg.replace(/\s/g,'+')
+    blog.comment.forEach(comment => {
+      comment.headImg = comment.headImg.replace(/\s/g,'+')
+    })
   })
 })
 //获取所有问答
@@ -46,12 +48,16 @@ if(getToken().username != undefined){
 }
 
 const getters = {
-  //当前用户的博客
+  //当前用户已发布的博客
   getMyBlog(state){
     const myBlog = state.allBlog.filter(blog => {
       return blog.username === state.token.username
     })
     return myBlog
+  },
+  //当前用户的所有博客
+  getMyAllBlog(state,getters){
+    return state.noPubBlog.concat(getters.getMyBlog)
   }
 }
 
@@ -61,7 +67,6 @@ const mutations = {
   quit(state){
     state.isLoad = false
     state.token = {}
-    // state.myBlog = []
   },
   //登录注册
   load(state){
@@ -72,10 +77,17 @@ const mutations = {
   addBlog(state,blog){
     state.allBlog.push(blog)
   },
+  //添加草稿箱
+  addNoPublish(state,blog){
+    state.noPubBlog.push(blog)
+  },
   //删除博客
   cancelBlog(state,title){
-    for(let i = 0; i < state.allBlog.length; i++){
-      if(state.allBlog[i].title === title && state.allBlog[i].username === state.token.username){
+    console.log(getters.getMyBlog)
+    console.log(state.getMyBlog)
+    var arr = getters.getMyBlog.concat(state.noPubBlog)
+    for(let i = 0; i < arr.length; i++){
+      if(arr[i].title === title){
         state.allBlog.splice(i,1)
         break;
       }
@@ -95,19 +107,20 @@ const mutations = {
     var blog
     for(let i = 0; i < state.noPubBlog.length; i++){
       if(state.noPubBlog[i].title === title && state.noPubBlog[i].username === state.token.username){
-        blog = state.noPubBlog.splice(i,1)
+        blog = state.noPubBlog.splice(i,1)[0]
         break;
       }
-    }
+    } 
     blog.publish = true
     //添加到已发布博客数组中
     this.commit('addBlog',blog)
   },
   //提交评论
   publishComment(state,payload){
+    console.log(payload)
     state.allBlog.forEach(blog => {
       if(blog.username === payload.username && blog.title === payload.title){
-        blog.answer.push(payload.answer)
+        blog.comment.push(payload.comment)
       }
     })
   },

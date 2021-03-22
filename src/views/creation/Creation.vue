@@ -15,6 +15,7 @@
       </div>
       <div class="art_content">
         <mavon-editor  ref="editor" v-model="content" class="content"/>
+        <!-- <quill-editor v-model="content" class="content"/> -->
       </div>
       <div class="other_msg">
         <div class="tag">标签</div>
@@ -44,7 +45,7 @@
 
 <script>
 
-import { addBlog } from 'network/blog'
+// import { addBlog } from 'network/blog'
 
 import NoLoad from 'components/noload/NoLoad'
 
@@ -52,6 +53,7 @@ import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
 
 export default {
+  name: 'Creation',
   data(){
     return {
       typeList: ['原创','转载'],
@@ -69,7 +71,7 @@ export default {
     NoLoad
   },
   methods: {
-    createBlog(type){
+    createBlog(isPublish){
       const blog = {
         username: this.$store.state.token.username,
         headImg: this.$store.state.token.headImg,
@@ -82,20 +84,38 @@ export default {
         comment: [],
         browse: 0,
         date: new Date().getTime(),
-        publish: type
+        publish: isPublish
       }
       console.log(blog)
       //将博客保存到数据库中
-      addBlog(blog).then((data) => {
-        console.log(data)
+      //addBlog(blog).then((data) => {
+       // console.log(data)
         //将博客保存到store中
-        this.$store.commit('addBlog',blog)
-        //显示保存成功的弹窗
+        if(isPublish){
+          this.$store.commit('addBlog',blog)
+        }else{
+          this.$store.commit('addNoPublish',blog)
+        }
+        
+        // 显示保存成功的弹窗
         this.$message({
           type: 'success',
           message: '发布成功'
         })
-      })
+        // setTimeout(() => {
+        //   //跳转到我的博客页面
+        //   this.$router.push('/myblog')
+        // },3000)
+        setTimeout(() =>{
+           this.$router.push({
+            path: '/detailblog',
+            query: {
+              username: blog.username,
+              title: blog.title
+            }
+          })
+        },2000)
+      //})
     },
     handlePublish(){
       this.createBlog(true)
@@ -107,7 +127,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #creation{
   width: 70%;
   margin-left: 15%;
@@ -147,7 +167,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   width: 7%;
   border-radius: 5px;
   /* border: 1px solid rgba(102,154,58); */
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
   display: inline-block;
   text-align: center;
@@ -170,7 +190,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
 
   text-align: center;
   line-height: 35px;
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
 }
 .save{

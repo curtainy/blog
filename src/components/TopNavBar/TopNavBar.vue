@@ -16,7 +16,7 @@
       <span @click="registerBtn">注册</span>
     </div>
     <div class="load" v-if="$store.state.isLoad">
-      <img :src="$store.state.token.headImg">
+      <img :src="$store.state.token.headImg" @click="handleClick">
       <div class="user">{{$store.state.token.username}}</div>
       <div class="quit" @click="quit">退出登录</div>
     </div>
@@ -32,7 +32,7 @@ export default {
   data(){
     return {
       input: '',
-      navList: ['博客','问答','创作','我的博客','个人中心'],
+      navList: ['博客','创作','好友','个人中心'],
       currentIndex: 0,
     }
   },
@@ -58,12 +58,15 @@ export default {
         this.$router.push('/search/'+this.input)
         this.input = ''
       }
+    },
+    handleClick() {
+      this.$router.push('/profile')
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 #top-nav-bar{
   height: 50px;
   width: 100%;
@@ -111,7 +114,7 @@ export default {
   height: 40px;
   width: 40px;
   border-radius: 50%;
-  margin: 5px 15px 5px 60px;
+  margin: 5px 15px 5px 30px;
 }
 
 .user{
@@ -125,7 +128,7 @@ export default {
 .quit{
   display: inline-block;
   padding: 5px;
-  background: rgba(102,154,58);
+  background: #a1bdda;
   border-radius: 5px;
   position: relative;
   top: -20px;

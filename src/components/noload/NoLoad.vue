@@ -9,7 +9,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #no_load{
   position: absolute;
   left: 50%;

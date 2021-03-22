@@ -42,7 +42,7 @@
 <script>
 
 import { mapGetters } from 'vuex'
-import { modifyBlog } from 'network/blog'
+// import { modifyBlog } from 'network/blog'
 
 import { mavonEditor } from 'mavon-editor'
 import "mavon-editor/dist/css/index.css"
@@ -100,15 +100,15 @@ export default {
       }
       console.log(blog)
       //将博客保存到数据库中
-      modifyBlog(blog).then((data) => {
-       if(data.code === 0){
+      //modifyBlog(blog).then((data) => {
+     //  if(data.code === 0){
           //将博客保存到store中
           this.$store.commit('modifyBlog',blog)
           //显示保存成功的弹窗
-          this.$message({
-            type: 'success',
-            message: data.msg
-          })
+          // this.$message({
+          //   type: 'success',
+          //   message: data.msg
+          // })
         //跳转到详情页面
         this.$router.push({
           path: '/detailblog',
@@ -116,8 +116,8 @@ export default {
             blog
           }
         })
-       }
-      })
+      // }
+      //})
     },
     handlePublish(){
       this.createBlog(true)
@@ -129,7 +129,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #edit_msg{
   width: 70%;
   margin-left: 15%;
@@ -168,7 +168,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   height: 38px;
   width: 7%;
   border-radius: 5px;
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
   display: inline-block;
   text-align: center;
@@ -191,7 +191,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
 
   text-align: center;
   line-height: 35px;
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
 }
 .save{

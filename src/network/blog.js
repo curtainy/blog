@@ -1,4 +1,4 @@
-import request from './request'
+import { request, request1 } from './request'
 
 //写博客
 export function addBlog(blog){
@@ -22,13 +22,13 @@ export function addBlog(blog){
 // }
 
 //删除博客
-export function cancelBlog(data){
-  return request({
-    url: '/cancelblog',
-    method: 'get',
-    params: data
-  })
-}
+// export function cancelBlog(data){
+//   return request1({
+//     url: '/cancelblog',
+//     method: 'get',
+//     params: data
+//   })
+// }
 
 //修改博客
 export function modifyBlog(blog){
@@ -44,7 +44,7 @@ export function modifyBlog(blog){
 
 //获取所有博客
 export function allBlog(){
-  return request({
+  return request1({
     url: '/allblog',
     method: 'get'
   })
@@ -95,3 +95,35 @@ export function addBrowse(data){
   })
 }
 
+// 删除博客
+export function cancelBlog(data) {
+  return request1({
+      headers: {
+          "Content-Type":"application/x-www-form-urlencoded"
+      },
+      url: '/cancelblog',
+      method: 'post',
+      data
+  })
+}
+
+// 获取发布博客时所需的博客类型
+export function getBlogDetail(data) {
+  return request1({
+      url: '/blogdetail',
+      method: 'get',
+      params: data
+  })
+}
+
+// 发布博客
+export function publishBlog(data) {
+  return request1({
+      headers: {
+          "Content-Type":"application/x-www-form-urlencoded"
+      },
+      url: '/publishblog',
+      method: 'post',
+      data
+  })
+}

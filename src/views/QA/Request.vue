@@ -4,6 +4,7 @@
     <div class="req_content" v-else>
       <input type="text" placeholder="一句话描述清楚问题即可" v-model="title">
       <mavon-editor  ref="editor" v-model="content" class="content"/>
+      <!-- <quill-editor v-model="content" class="content"/> -->
       <div class="tag">标签</div>
       <el-select v-model="tag" multiple placeholder="标签" class="more_choose">
           <el-option
@@ -22,7 +23,7 @@
 
 import NoLoad from 'components/noload/NoLoad'
 import { mavonEditor } from 'mavon-editor'
-import { addRequest } from 'network/QA'
+// import { addRequest } from 'network/QA'
 import "mavon-editor/dist/css/index.css"
 
 export default {
@@ -40,21 +41,27 @@ export default {
   },
   methods: {
     submit(){
-      const data = {
+      const request = {
         username: this.$store.state.token.username,
         title: this.title,
-        reqContent: this.content,
+        reqContent: this.$refs.editor.d_render,
         tag: this.tag,
-        date: new Date().getTime()
+        date: new Date().getTime(),
+        answer: []
       }
-      console.log(data)
-      addRequest(data).then(data => {
-        if(data.code == 0){
-          this.$store.commit('addRequest',data)
-          this.$message({type: 'success',message: data.msg})
+      //console.log(request)
+
+      //addRequest(request).then(data => {
+       // if(data.code == 0){
+          this.$store.commit('addRequest',request)
+        //  this.$message({type: 'success',message: data.msg})
           this.$router.back()
-        }
-      })
+          //清空内容
+          this.title = ''
+          this.content = ''
+          this.tag = ''
+        //}
+     // })
     }
   }
 }
@@ -93,12 +100,12 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   width: 8%;
   border-radius: 5px;
   /* border: 1px solid rgba(102,154,58); */
-  background: rgba(102,154,58);
+  background: #409EFF;
   color: white;
   display: inline-block;
   text-align: center;
   line-height: 40px;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 .tag{
   margin-left: 5%;
