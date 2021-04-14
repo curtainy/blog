@@ -1,18 +1,20 @@
 <template>
-  <div class="fans">
-      <div class="tab">
+  <div class="concern">
+      <!-- <div class="tab">
             <span v-for="(item, index) in tabList" :key="index" 
                 :class="{'active': activeIndex === index}" 
                 @click="activeIndex=index"
             >{{item}}</span>
-      </div>
+      </div> -->
       <div class="fans-detail">
-          <div v-for="(user,index) in getContent" :key="index" class="detail">
+          <!-- <div v-for="(user,index) in getContent" :key="index" class="detail"> -->
+          <div v-for="(user,index) in concern" :key="index" class="detail">
               <el-avatar :size="60" :src="user.avatorUrl"></el-avatar>
-              <div class="user-name">{{user.nickName}}</div>
+              <div class="user-name">{{user.username}}</div>
               <div class="user-msg">{{user.introduce}}</div>
-              <el-button round class="btn" @click="cancelConcern(user.userId,user)" v-if="user.concern">取关</el-button>
-              <el-button round class="btn" @click="handleConcern(user.userId,user)" v-else>关注</el-button>
+              <el-button round class="btn" @click="handleConcern(user._id)" v-if="showCancelConcern">取关</el-button>
+              <!-- <el-button round class="btn" @click="cancelConcern(user._id,user)" v-if="user.concern">取关</el-button> -->
+              <!-- <el-button round class="btn" @click="handleConcern(user._id,user)" v-else>关注</el-button> -->
           </div>
       </div>
   </div>
@@ -20,47 +22,40 @@
 
 <script>
 
-import { toConcern, cancelConcern } from 'network/fans'
+import { toConcern } from 'network/user'
 
 export default {
     data() {
         return {
-            tabList: ['TA关注的人','TA的粉丝'],
-            activeIndex: 0,
+            // tabList: ['TA关注的人','TA的粉丝'],
+            // activeIndex: 0,
         }
     },
     props: {
-        concern: {},
-        fans: {}
+        concern: {}
+        // fans: {}
     },
     computed: {
-        getContent() {
-            if(this.activeIndex === 0) return this.concern
-            else return this.fans
+        // getContent() {
+        //     if(this.activeIndex === 0) return this.concern
+        //     else return this.fans
+        // }
+        showCancelConcern() {
+            const nowId = this.$route.params.id
+            if(this.$store.state.token._id == nowId) return true
+            else return false
         }
     },
     methods: {
-        async handleConcern(userId,user) {
-            const data = {
-                user: this.$store.state.userId,
-                friend: userId
-            }
-            await toConcern(data).then((res) => {
+        handleConcern(userId,user) {
+            toConcern({
+                _id: this.$store.state.token._id,
+                fansId: userId,
+                concernFlag: true
+            }).then((res) => {
                 if(res.code === '0') {
-                    this.$message.success('关注成功')
+                    this.$message.success(res.code.msg)
                     user.concern = true
-                } 
-            })
-        },
-        async cancelConcern(userId,user) {
-            const data = {
-                user: this.$store.state.userId,
-                friend: userId
-            }
-            await cancelConcern(data).then((res) => {
-            if(res.code === '0') {
-                    this.$message.success('已取消关注')
-                    user.concern = false
                 } 
             })
         }
@@ -69,7 +64,7 @@ export default {
 </script>
 
 <style scoped lang="less">
- .fans {
+ .concern {
      width: 100%;
     .tab {
         padding: 10px;
@@ -89,6 +84,9 @@ export default {
             padding: 10px 20px;
             position: relative;
             border-bottom: 1px solid #dfe1e4;
+            &:first-child {
+                border-top: 1px solid #dfe1e4;
+            }
             & > div {
                 display: inline-block;
             }

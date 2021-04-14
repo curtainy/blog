@@ -1,5 +1,5 @@
 <template>
-  <div id="fans">fans</div>
+  <div id="space">space</div>
 </template>
 
 <script>
@@ -8,8 +8,8 @@ export default {
 }
 </script>
 
-<style>
-#fans {
+<style scoped>
+#space {
   width: 70%;
   min-height: calc(100vh - 80px);
   background: white;

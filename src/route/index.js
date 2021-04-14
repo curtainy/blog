@@ -9,6 +9,18 @@ const routes = [
     redirect: '/article'
   },
   {
+    path: '/login',
+    component: () => import('views/login/Login')
+  },
+  {
+    path: '/register',
+    component: () => import('views/register/index')
+  },
+  {
+    path: '/findpassword',
+    component: () => import('views/login/findPassword')
+  },
+  {
     path: '/article',
     component: () => import('views/allblog/AllBlog')
   },
@@ -17,39 +29,23 @@ const routes = [
     component: () => import('views/creation/Creation')
   },
   {
-    path: '/fans',
-    component: () => import('views/fans/index')
+    path: '/chat',
+    component: () => import('views/chat/index')
   },
+  // {
+  //   path: '/myblog',
+  //   component: () => import('views/myblog/MyBlog')
+  // },
+  // {
+  //   path: '/modifyblog/:blogId',
+  //   component: () => import('views/modifyblog/ModifyBlog')
+  // },
   {
-    path: '/request',
-    component: () => import('views/QA/Request')
-  },
-  {
-    path: '/reqdetail/:title',
-    component: () => import('views/QA/ReqDetail')
-  },
-  {
-    path: '/login',
-    component: () => import('views/login-demo/Login')
-  },
-  {
-    path: '/register',
-    component: () => import('views/register/index')
-  },
-  {
-    path: '/myblog',
-    component: () => import('views/myblog/MyBlog')
-  },
-  {
-    path: '/modifyblog/:title',
-    component: () => import('views/modifyblog/ModifyBlog')
-  },
-  {
-    path: '/personal',
+    path: '/personal/:id',
     component: () => import('views/personal/index')
   },
   {
-    path: '/detailblog',
+    path: '/blogdetail/:blogId',
     component: () => import('components/detailblog/DetailBlog')
   },
   {

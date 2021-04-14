@@ -1,27 +1,18 @@
-import { request, request1 } from './request'
+import request from './request'
 
 //写博客
-export function addBlog(blog){
-  return request({
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    url: '/addBlog',
-    method: 'post',
-    data: blog
-  })
-}
-
-///我的博客
-// export function myBlog(username){
+// export function addBlog(blog){
 //   return request({
-//     url: '/myblog',
-//     method: 'get',
-//     params: username
+//     headers: {
+//       "Content-Type":"application/x-www-form-urlencoded"
+//     },
+//     url: '/addBlog',
+//     method: 'post',
+//     data: blog
 //   })
 // }
 
-//删除博客
+// 删除博客
 // export function cancelBlog(data){
 //   return request1({
 //     url: '/cancelblog',
@@ -31,45 +22,41 @@ export function addBlog(blog){
 // }
 
 //修改博客
-export function modifyBlog(blog){
-  return request({
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    url: '/modifyblog',
-    method: 'post',
-    data: blog
-  })
-}
+// export function modifyBlog(blog){
+//   return request({
+//     headers: {
+//       "Content-Type":"application/x-www-form-urlencoded"
+//     },
+//     url: '/modifyblog',
+//     method: 'post',
+//     data: blog
+//   })
+// }
 
-//获取所有博客
-export function allBlog(){
-  return request1({
-    url: '/allblog',
-    method: 'get'
-  })
-}
-
-//将草稿发布
-export function saveToPub(data){
+//获取博客列表
+export function allBlog(data){
   return request({
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: '/savetopub',
+    url: '/allblog',
     method: 'post',
     data
   })
 }
 
-//获取用户还未发布的博客
-export function noPubBlog(username){
+// 获取博客详情
+export function blogDetail(data) {
   return request({
-    url: '/nopubblog',
-    method: 'get',
-    params: username
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    url: '/blogDetail',
+    method: 'post',
+    data
   })
 }
+
 
 //发表评论
 export function publishComment(data){
@@ -77,52 +64,65 @@ export function publishComment(data){
     headers: {
       'Content-type': 'application/x-www-form-urlencoded' 
     },
-    url: '/publishcomment',
+    url: '/publishComment',
     method: 'post',
     data
   })
 }
 
-//访问量+1
-export function addBrowse(data){
+// 获取博客分类
+export function getBlogCategory(data) {
   return request({
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      'Content-type': 'application/x-www-form-urlencoded' 
     },
-    url: '/addbrowse',
+    url: '/blogCategory',
     method: 'post',
     data
   })
-}
+} 
 
 // 删除博客
 export function cancelBlog(data) {
-  return request1({
+  return request({
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
-      url: '/cancelblog',
+      url: '/cancelBlog',
       method: 'post',
       data
   })
 }
 
 // 获取发布博客时所需的博客类型
-export function getBlogDetail(data) {
-  return request1({
-      url: '/blogdetail',
-      method: 'get',
-      params: data
-  })
-}
+// export function getBlogDetail(data) {
+//   return request1({
+//       url: '/blogdetail',
+//       method: 'get',
+//       params: data
+//   })
+// }
 
 // 发布博客
 export function publishBlog(data) {
-  return request1({
+  return request({
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
-      url: '/publishblog',
+      url: '/publishBlog',
+      method: 'post',
+      data
+  })
+}
+
+
+// 收藏
+export function collectBlog(data) {
+  return request({
+      headers: {
+          "Content-Type":"application/x-www-form-urlencoded"
+      },
+      url: '/collectBlog',
       method: 'post',
       data
   })

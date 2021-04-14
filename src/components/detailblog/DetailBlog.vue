@@ -6,18 +6,30 @@
       <span>{{blog.username}}</span>
       <span class="db_date">{{blog.date | date}}</span>
       <i class="el-icon-chat-line-round"></i>
-      <span class="number">{{getLength(blog.comment)}}</span>
+      <span class="number">{{getLength}}</span>
       <i class="el-icon-view"></i>
       <span class="number">{{blog.browse}}</span>
     </div>
-    <div v-highlight v-html="content"></div>
+    <div v-highlight v-html="content"></div> 
+    <div class="operate">
+      <div @click="handleThumb" :class="{'checked': thumbed}"><i class="el-icon-thumb"></i> 点赞</div>
+      <div @click.stop="handleCollect" :class="{'checked': collected}"><i class="el-icon-star-off"></i> 收藏</div>
+      <div @click="dialogVisible=true" :class="{'checked': reported}"><i class="el-icon-warning-outline"></i> 举报</div>
+    </div>
     <div class="db_comment">
-      <img v-if="this.$store.state.isLoad" :src="blog.headImg">
+      <img v-if="this.$store.state.isLoad" :src="blog.avatorUrl">
       <img v-else src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=145692761,4091651670&fm=26&gp=0.jpg">
-      <textarea rows="2" ref="cnt" autofocus v-model="commentConent" placeholder="优质评论可以帮助作者获得更高的权重"></textarea>
-      <div @click="sendComment(blog.title)">发表评论</div>
+      <el-input v-model="commentContent" placeholder="请留下你的评论吧~" style="width: 80%;"></el-input>
+      <div @click="sendComment" style="cursor: pointer;" :disabled="commentContent.length">发表评论</div>
     </div>
     <comment-list :commentList="blog.comment" @resComment="resComment"/>
+    <el-dialog title="请输入举报原因"  :visible.sync="dialogVisible" width="30%">
+      <el-input v-model="reportReason" placeholder="请输入"></el-input>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleReoprt" :disabled="reportReason.length == 0">确 定</el-button>
+      </div>
+    </el-dialog> 
   </div>
 </template>
 
@@ -25,107 +37,125 @@
 
 import marked from 'marked'
 import CommentList from 'components/comment/CommentList'
-import {mapGetters} from 'vuex'
-// import { publishComment, addBrowse } from 'network/blog'
+import { blogDetail, publishComment, collectBlog } from 'network/blog'
+import { report, thumb } from 'network/topic.js'
 
 export default {
   name: 'DetailBlog',
   data(){
     return {
-      blog: '',
+      dialogVisible: false,
+      thumbed: false,
+      collected: false,
+      reported: false,
+      reportReason: '',
+      blog: {},
       content: '',
-      commentConent: '',
-      type: true,   //true发表或false评论
+      commentContent: '',
+      type: 0,   //0 发表   1 评论
+      tolderId: '', // 被回复的人
       resIndex: ''//被回复评论的索引
     }
   },
   components:{
     CommentList
   },
-  computed: {
-    ...mapGetters(['getMyBlog']),
-    getLength(){
-      return function(arr){
-        let count = arr.length
-        arr.forEach(item => {
-          count += item.response.length
-        })
-        return count
-      }
-    }
-  },
-  created(){
-    const {username,title} = this.$route.query
-    var blog = ''
-    //获取博客内容
-    if(username == this.$store.state.token.username) blog = this.getMyBlog
-    else blog = this.$store.state.allBlog
-    blog.forEach(item => {
-      if(item.title === title && item.username == username) this.blog = item
+  async mounted() {
+    await blogDetail({blogId: this.$route.params.blogId}).then(res => {
+      if(res.code === '0') this.blog = res.data
     })
     this.content = marked(this.blog.content)
-    //博客访问量+1
-    // addBrowse({username,title}).then(data => {
-    //   if(data.code == 0){
-        this.$store.commit('addBrowse',{username,title})
-    //  }
-   // })
+  },
+  computed: {
+    getLength(){
+      if(!this.blog.comment) return 0
+      let count = this.blog.comment.length
+      this.blog.comment.forEach(item => {
+        item.response && (count += item.response.length)
+      })
+      return count
+    }
   },
   methods: {
     //发表评论
-    sendComment(title){
-      if(this.commentConent == ''){//评论内容为空
-        this.$message.error('评论内容不能为空')
-      }else if(!this.$store.state.isLoad){//还未登录
+    sendComment(){
+      if(!this.$store.state.isLoad){//还未登录
         this.$message.error('登录后才能进行评论哦')
       }else{ 
-        const comment = {
-          username: this.$store.state.token.username,
-          headImg: this.$store.state.token.headImg,
-          content: this.commentConent,
-          date: new Date().getTime(),
-          response: []
-        }
-
-        if(this.type){ //发表评论
-          const payload = {username:this.blog.username,title:title,comment}
-          // publishComment(payload)
-          // .then((data) => {
-          //   if(data.code === 0){
-               //清空评论中内容
-              this.commentConent = ''
-              //弹窗
-             // this.$message({type: 'success', message: data.msg})
-              //修改store中的allBlog
-              this.$store.commit('publishComment',payload)
-          //   }
-          // })
-        }else{ //回复评论
-          delete comment.response
-          const payload = {username:this.blog.username,title,index:this.resIndex,comment}
-          // publishComment(payload).then(data => {
-          //   if(data.code === 0){
-          //     this.$message({type: 'success',message: data.msg})
-              //修改store
-              this.$store.commit('responseComment',payload)
-              this.commentConent = ''
-              this.type = true
-          //   }
-          // })
-        }
+        // 评论主要内容
+        const data = Object.assign(this.$store.state.token, {
+          content: this.commentContent,  // 评论内容
+          date: new Date().getTime(), // 时间
+          index: this.resIndex, // 被回复的索引
+          type: this.type, // 类型
+          tolder: this.type === 0 ? this.blog._id : this.tolderId // 被回复人的id
+        })
+        publishComment(data).then(res => {
+          if(res.code === '0') {
+            this.$message.success('评论成功')
+            if(this.type == 0) this.blog.comment.push(data)
+            else this.blog.comment[this.resIndex].response.push(data)
+            this.commentContent = ''
+            this.type = 0
+          }
+        })
       }
     },
     //回复评论
-    resComment(index,cnthead){
-      this.commentConent = cnthead
+    resComment(index,username,id){
+      this.commentContent = '@'+ username
       this.resIndex = index
-      this.type = false
+      this.type = 1
+      this.tolderId = id
+    },
+    // 举报
+    handleReoprt() {
+      report({
+         _id: this.$store.state.token._id,
+        reportReason: this.reportReason,
+        date: new Date().getTime(),
+        type: 'blog',
+        //    id: 话题对应的id
+        reportedId: this.blog._id // 被举报人的id
+      }).then(res => {
+        if(res.code === '0') {
+          this.$message.success('已提交举报')
+          this.dialogVisible = false
+          this.reportReason = ''
+          this.reported = true
+        }
+      })
+    },
+    // 点赞
+    handleThumb() {
+      thumb({
+        //    id: 话题对应id
+        id: 1,
+        type: 'blog',
+        thumbFlag: this.thumbed
+        }).then(res => { 
+          if(res.code === '0') {
+            this.thumbed = !this.thumbed
+          }
+        })
+    },
+    // 收藏
+    handleCollect() {
+      collectBlog({
+        _id: this.$store.state.token._id,
+        blogId: this.blog.blogId,
+        collectFlag: this.collected
+      }).then(res => {
+        if(res.code === '0') {
+          this.collected = !this.collected
+        }
+      })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .detail_blog{
   width: 70%;
   margin-left: 15%;
@@ -134,6 +164,7 @@ export default {
   border-radius: 5px;
   padding: 10px;
   min-height: calc(100vh - 90px);
+  position: relative;
 }
 .db_title{
   font-size: 35px;
@@ -165,8 +196,8 @@ export default {
 }
 
 .db_comment>img{
-  margin-top: 50px;
-  margin-right: 20px;
+  margin-top: 80px;
+  margin-right: 0px;
   height: 40px;
   width: 40px;
   border-radius: 50%;
@@ -191,5 +222,24 @@ textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
   margin-left: 20px;
   margin-bottom: 10px;
   border-radius: 5px;
+}
+.operate {
+  position: absolute;
+  right: 0;
+  &  i {
+    transform: scale(1.5);
+  }
+  & > div {
+    display: inline-block;
+    padding: 20px;
+    font-size: 14px;
+  }
+  & > div:hover {
+    cursor: pointer;
+    color: #589ef8; 
+  }
+  .checked {
+    color: #589ef8; 
+  }
 }
 </style>

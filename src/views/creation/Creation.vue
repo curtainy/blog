@@ -3,7 +3,7 @@
     <no-load v-if="!$store.state.isLoad"/>
     <div v-else>
       <div class="head">
-        <el-select v-model="type" placeholder="类型" class="choose">
+        <el-select v-model="blog.type" placeholder="类型" class="choose">
           <el-option
             v-for="(item,index) in typeList"
             :key="index"
@@ -11,15 +11,15 @@
             :value="item">
           </el-option>
         </el-select>
-        <input type="text" placeholder="标题" v-model="title">
+        <input type="text" placeholder="标题" v-model="blog.title">
       </div>
       <div class="art_content">
-        <mavon-editor  ref="editor" v-model="content" class="content"/>
+        <mavon-editor  ref="editor" v-model="blog.content" class="content"/>
         <!-- <quill-editor v-model="content" class="content"/> -->
       </div>
       <div class="other_msg">
         <div class="tag">标签</div>
-        <el-select v-model="tag" multiple placeholder="标签" class="more_choose">
+        <el-select v-model="blog.tag" multiple placeholder="标签" class="more_choose">
           <el-option
             v-for="(item,index) in tagList"
             :key="index"
@@ -28,7 +28,7 @@
           </el-option>
         </el-select>
         <div class="category">分类</div>
-        <el-select v-model="category" multiple placeholder="分类" class="more_choose">
+        <el-select v-model="blog.category" placeholder="分类" class="more_choose">
           <el-option
             v-for="(item,index) in categoryList"
             :key="index"
@@ -36,17 +36,25 @@
             :value="item">
           </el-option>
         </el-select>
+        <el-dialog title="请输入新增的分类" :visible.sync="dialogFormVisible" width="30%">
+          <el-input v-model="newCategory" placeholder="请输入"></el-input>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addCategory">确 定</el-button>
+          </div>
+        </el-dialog>
       </div>
       <div class="publish" @click="handlePublish">发布文章</div>
-      <div class="save" @click="handleSave">保存草稿</div>
+      <!-- <div class="save" @click="handleSave">保存草稿</div> -->
     </div>
   </div>
 </template>
 
 <script>
 
-// import { addBlog } from 'network/blog'
-
+import { publishBlog, getBlogCategory, blogDetail } from 'network/blog'
+// import { addBlogCategory } from 'network/user'
+ 
 import NoLoad from 'components/noload/NoLoad'
 
 import { mavonEditor } from 'mavon-editor'
@@ -57,71 +65,66 @@ export default {
   data(){
     return {
       typeList: ['原创','转载'],
-      tagList: ['数据库','前端','后端','运维','大数据','人工智能','算法','其他'],
-      categoryList: ['前端','大数据','人工智能','后台','Android','ios','产品','运营','数据结构与算法','操作系统','数据库','其他'],
-      type: '',
-      title: '',
-      category: [],
-      tag: [],
-      content: ''
+      tagList: ['数据库','前端','后端','Android','IOS','人工智能','开发工具','其他'],
+      categoryList: [],
+      dialogFormVisible: false,
+      newCategory: '',
+      blog: {
+        type: '',
+        title: '',
+        category: '',
+        tag: [],
+        content: ''
+      },
     }
   },
   components: {
     mavonEditor,
     NoLoad
   },
+  async mounted() {
+    // 获取当前用户的博客分类
+    await getBlogCategory({_id: this.$store.state.token._id}).then(res => {
+      if(res.code === '0') {
+        this.categoryList = [...res.data.categoryList,'新增']
+      }
+    })
+    // 用户对已发布博客进行编辑
+    if(this.$route.query.blogId) {
+      blogDetail({blogId: this.$route.query.blogId}).then(res => {
+        if(res.code == '0') {
+          this.blog = res.data
+        }
+      })
+    }
+  },
+  watch: {
+        'blog.category'(val) {
+            if(val === '新增'){
+                this.dialogFormVisible = true
+            }
+        }
+  },
   methods: {
-    createBlog(isPublish){
-      const blog = {
-        username: this.$store.state.token.username,
-        headImg: this.$store.state.token.headImg,
-        type: this.type,
-        title: this.title,
-        content: this.content,
-        tag: this.tag,
-        category: this.category,
+    handlePublish(){
+      publishBlog(Object.assign(this.blog, {
+        _id: this.$store.state.token._id,
         thumbs: 0,
         comment: [],
         browse: 0,
-        date: new Date().getTime(),
-        publish: isPublish
-      }
-      console.log(blog)
-      //将博客保存到数据库中
-      //addBlog(blog).then((data) => {
-       // console.log(data)
-        //将博客保存到store中
-        if(isPublish){
-          this.$store.commit('addBlog',blog)
-        }else{
-          this.$store.commit('addNoPublish',blog)
+        date: new Date().getTime()
+      })).then(res => {
+        if(res.code === '0') {
+          this.$message.success('发布成功')
+          this.$router.push('/blogdetail/' + this.$route.query.blogId)
         }
-        
-        // 显示保存成功的弹窗
-        this.$message({
-          type: 'success',
-          message: '发布成功'
-        })
-        // setTimeout(() => {
-        //   //跳转到我的博客页面
-        //   this.$router.push('/myblog')
-        // },3000)
-        setTimeout(() =>{
-           this.$router.push({
-            path: '/detailblog',
-            query: {
-              username: blog.username,
-              title: blog.title
-            }
-          })
-        },2000)
-      //})
+      })
     },
-    handlePublish(){
-      this.createBlog(true)
-    },
-    handleSave(){
-      this.createBlog(false)
+    addCategory() {
+      this.dialogFormVisible = false
+      this.blog.category = this.newCategory
+      this.categoryList.splice(this.categoryList.length-1,0,this.newCategory)
+      this.$message.success('添加成功')
     }
   }
 }
@@ -199,6 +202,7 @@ input::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
 .publish{
   position: relative;
   left: -3px;
+  cursor: pointer;
 }
 
 </style>

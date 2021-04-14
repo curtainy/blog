@@ -3,63 +3,22 @@
      <no-load v-if="!this.$store.state.isLoad"/>
      <div class="profile" v-else>
        <div>
-          <img :src="user.headImg">
+          <img :src="userInfo.avatorUrl">
           <div class="imgbtn" @click="chooseImg">修改头像</div>
           <input type="file" class="upload" accept="image/*" @change="handleImg(getImgUrl)">
        </div>
         <div class="pro_msg">
           <div class="msg_top">
-             <div>账号：{{user.username}}</div>
-             <div>已发表博客：{{getMyBlog.length}}</div>
-             <div>草稿箱：{{this.$store.state.noPubBlog.length}}</div>
+             <div>账号：{{userInfo.account}}</div>
+             <div>已发表博客：{{userInfo.blogs}}</div>
+             <div>收藏博客数：{{userInfo.collects}}</div>
           </div>
-          <!-- <div class="msg_bottom" v-if="!edit">
-            <div>姓名：{{user.rname}}<span class="modify_msg" @click="editBtn">修改资料</span></div>
-            <div>性别：{{user.sex}}</div>
-            <div>生日：{{user.birth | birth}}</div>
-            <div>职位：{{user.post}}</div>
-            <div>公司：{{user.company}}</div>
-            <div>学历：{{user.degree}}</div>
-            <div>学校：{{user.college}}</div>
-            <div>简介：{{user.profile}}</div>
-          </div>
-          <div class="msg_bottom" v-else>
-            <div>姓名：<input type="text" v-model="user.rname"></div>
-            <div>性别：
-              <el-radio label="男" v-model="user.sex">男</el-radio>
-              <el-radio label="女" v-model="user.sex">女</el-radio>
-            </div>
-            <div>生日：
-              <el-date-picker
-                type="date"
-                v-model="user.birth"
-                placeholder="选择日期">
-              </el-date-picker>
-            </div>
-            <div>职位：<input type="text" v-model="user.post"></div>
-            <div>公司：<input type="text" v-model="user.company"></div>
-            <div>学历：
-              <el-select placeholder="请选择" v-model="user.degree">
-                <el-option
-                  v-for="item in options"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                >
-                </el-option>
-              </el-select>
-            </div>
-            <div>学校：<input type="text" v-model="user.college"></div>
-            <div>简介：<textarea rows="1" cols="20" v-model="user.profile"></textarea></div>
-            <div class="cancel_edit" @click="cancelBtn">取消</div>
-            <div class="save_edit" @click="saveUser">保存</div>
-          </div> -->
           <div class="info base">
           <div class="title">基本信息</div>
           <div class="ctx" v-if="baseShow">
               <div class="ctx-detail">
                     <span class="tag">用户昵称</span>
-                    <span class="tag-ctx">{{userInfo.nickName}}</span>
+                    <span class="tag-ctx">{{userInfo.username}}</span>
                     <span class="edit" @click="baseShow = false"><i class="el-icon-edit-outline"></i>编辑</span>
               </div>
                <div class="ctx-detail">
@@ -84,7 +43,7 @@
           <div class="modify" v-else>
               <el-form ref="form" :model="userInfo" label-width="80px">
                 <el-form-item label="用户昵称">
-                    <el-input v-model="userInfo.nickName"></el-input>
+                    <el-input v-model="userInfo.username"></el-input>
                 </el-form-item>
                 <el-form-item label="真实姓名">
                     <el-input v-model="userInfo.realName"></el-input>
@@ -140,7 +99,7 @@
                     <el-date-picker v-model="userInfo.studyDate" type="date" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
                  <el-form-item label="学历">
-                    <el-select v-model="userInfo.record" placeholder="请选择" style="width: 30%">
+                    <el-select v-model="userInfo.record" placeholder="请选择" style="width: 50%">
                         <el-option :label="item" :value="item" v-for="(item,index) in recordList" :key="index" class="choose"></el-option>
                     </el-select>
                 </el-form-item>
@@ -161,15 +120,15 @@
 
 <script>
 
-import { getProfile, updateUser, updateHeadImg } from 'network/user'
+// import { getProfile, updateUser, updateAvatorUrl } from 'network/user'
 import NoLoad from 'components/noload/NoLoad'
 import { mapGetters } from 'vuex'
-import { getPersonalCenter, modifyPersonCenter } from 'network/user'
+import { getPersonalCenter, modifyUserInfo, changeAvator } from 'network/user'
 
 export default {
   data(){
     return {
-      user: {},
+      // user: {},
       edit: false,
       options: ['高中以下','高中','大专','本科','硕士','博士'],
       baseShow: true,
@@ -186,16 +145,8 @@ export default {
   computed: {
     ...mapGetters(['getMyBlog'])
   },
-  created(){
-    //获取用户详细信息
-    getProfile({username:this.$store.state.token.username})
-    .then(data => {
-      this.user = data.data
-      this.user.headImg = this.user.headImg.replace(/\s/g,'+')
-    })
-  },
   async mounted() {
-        await getPersonalCenter().then((res) => {
+        await getPersonalCenter({_id: this.$store.state.token._id}).then((res) => {
             if(res.code === '0') {
                 this.userInfo = res.data
             }
@@ -221,13 +172,12 @@ export default {
       }
     },
     getImgUrl(url){
-      this.user.headImg = url
+      this.userInfo.avatorUrl = url
       //更新数据库中信息
-      updateHeadImg({username: this.user.username,newHeadImg:url})
+      changeAvator({_id: this.$store.state.token._id,newAvatorUrl:url})
       .then(data => {
         if(data.code === 0){
-          //更新store中的信息
-           this.$store.commit('updateHeadImg',url)
+          //...
         }
       })
     },
@@ -237,17 +187,10 @@ export default {
     cancelBtn(){
       this.edit = !this.edit
     },
-    saveUser(){
-      this.edit = !this.edit
-      updateUser({user:this.user}).then(data => {
-        this.$message({type:'success',message: data.msg})
-      })
-    },
     async handleModify() {
             this.baseShow = true
             this.eductationShow = true
-            await modifyPersonCenter(this.userInfo).then((res) => {
-                // console.log(res)
+            await modifyUserInfo(this.userInfo).then((res) => {
                 if(res.code === '0') {
                     this.$message.success('修改成功')
                 }
@@ -381,7 +324,7 @@ export default {
             padding-bottom: 20px;
         }
         .el-input {
-            width: 30% !important;
+            width: 50% !important;
         }
     }
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div class="blog-list">
-     <div v-for="(item,index) in blogList" :key="index" class="detail">
-                <div class="title" @click="toBlogDetail(item)">
-                  {{item.title}}
+     <div v-for="(blog,index) in blogList" :key="index" class="detail">
+                <div class="title" @click="toBlogDetail(blog.blogId)">
+                  {{blog.title}}
                   <!-- 博客仅自己可见 -->
                   <!-- <i class="el-icon-lock"></i> -->
                 </div>
-                <div class="blog-content">{{item.content}}</div>
+                <div class="blog-content">{{blog.content}}</div>
                 <div class="other">
-                    <span>{{item.createTime}}</span>
-                    <div class="btn" v-show="item.userId != $store.state.token._id">
-                        <span>编辑</span>
-                        <span @click="cancelBlog(index,item.title)">删除</span>
+                    <span>{{blog.date}}</span>
+                    <div class="btn" v-show="$route.params.id == $store.state.token._id">
+                        <span @click="edit(blog.blogId)">编辑</span>
+                        <span @click="cancel(index,blog.blogId)">删除</span>
                     </div>
                 </div>
       </div>
@@ -26,26 +26,34 @@ export default {
   props: {
     tagName: {},
     blogList: {},
-    activeBlog: {}
+    // activeBlog: {}
   },
   methods: {
-    async cancelBlog(index,title) {
-      const data = {
-        userId: this.$store.state.user.userId,
-        tagName: this.tagName,
-        title
-      }
-      this.blogList.splice(index,1)
-      await cancelBlog(data).then((res) => {
+    // 编辑博客
+    edit(blogId) {
+      this.$router.push({
+        path: '/creation',
+        query: {
+          blogId
+        }
+      })
+      // this.$bus.$emit('editBlog',blogId)
+    },
+    // 删除博客
+    cancel(index,blogId) {
+      cancelBlog({
+        _id: this.$store.state.token._id,
+        blogId
+      }).then(res => {
         if(res.code === '0') {
           this.$message.success('删除成功')
+          this.blogList.splice(index,1)
         }
       })
     },
-    toBlogDetail(blog) {
-      // this.activeBlog = blog
-      this.$bus.$emit('blogDetail', blog)
-      this.$router.push('/blogdetail/' + blog.userId + '/' + blog.title)
+    // 跳转到博客详情
+    toBlogDetail(blogId) {
+      this.$router.push('/blogdetail/' + blogId)
     }
   }
 }

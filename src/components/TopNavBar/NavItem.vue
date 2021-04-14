@@ -29,8 +29,8 @@ export default {
       switch(index){
         case 0: this.$router.push('/article'); break;
         case 1: this.$router.push('/creation'); break;
-        case 2: this.$router.push('/fans'); break;
-        case 3: this.$router.push('/personal');break;
+        case 2: this.$router.push('/chat'); break;
+        case 3: this.$router.push('/personal/' + this.$store.state.token._id);break;
         default:
       }
     }

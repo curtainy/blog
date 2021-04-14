@@ -1,12 +1,25 @@
-import { request1 } from './request'
+import request from './request'
 
 // 取消收藏的博客
 export function cancelCollect(data) {
-    return request1({
+    return request({
         headers: {
             "Content-Type":"application/x-www-form-urlencoded"
         },
-        url: '/cancelcollect',
+        url: '/cancelCollect',
+        method: 'post',
+        data
+    })
+}
+
+
+// 收藏
+export function collectBlog(data) {
+    return request({
+        headers: {
+            "Content-Type":"application/x-www-form-urlencoded"
+        },
+        url: '/collectBlog',
         method: 'post',
         data
     })

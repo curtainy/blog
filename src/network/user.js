@@ -1,4 +1,4 @@
-import { request, request1 } from './request'
+import request from './request'
 
 //注册
 export function register(data){
@@ -24,43 +24,23 @@ export function login(data){
   })
 }
 
-//获取用户详细信息
-export function getProfile(username){
-  return request({
-    url: '/profile',
-    method: 'get',
-    params: username
-  })
-}
 
-//修改用户信息
-export function updateUser(data){
-  
-  return request({
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    url: '/updateuser',
-    method: 'post',
-    data
-  })
-}
 
 //修改用户头像
-export function updateHeadImg(data){
-  return request({
-    headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
-    },
-    url: "/updateHeadimg",
-    method: 'post',
-    data
-  })
-}
+// export function updateAvatorUrl(data){
+//   return request({
+//     headers: {
+//       "Content-Type":"application/x-www-form-urlencoded"
+//     },
+//     url: "/updateAvatorUrl",
+//     method: 'post',
+//     data
+//   })
+// }
 
 //修改密码
 export function findPassword(data) {
-  return request1({
+  return request({
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
@@ -72,7 +52,7 @@ export function findPassword(data) {
 
 //发送验证码
 export function sendVerificationCode(data) {
-  return request1({
+  return request({
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
@@ -83,8 +63,8 @@ export function sendVerificationCode(data) {
 }
 
 // 比对验证码
-export function VerificationCode(data) {
-  return request1({
+export function verificationCode(data) {
+  return request({
     headers: {
       "Content-Type":"application/x-www-form-urlencoded"
     },
@@ -96,40 +76,68 @@ export function VerificationCode(data) {
 
 //获取个人中心信息(需要传入userId)
 export function getPersonalCenter() {
-  return request1({
-      url: '/personalcenter',
+  return request({
+      url: '/personalCenter',
       method: 'get',
       // params: data
   })
 }
 
 //修改个人中心信息(需要传入userId)
-export function modifyPersonCenter(data) {
-  return request1({
+export function modifyUserInfo(data) {
+  return request({
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
-      url: '/modifypersonalcenter',
+      url: '/modifyUserInfo',
       method: 'post',
       data
   })
 }
 
 //获取个人页面相关信息
-export function getUserDetail() {
-  return request1({
-      url: '/userdetail',
-      method: 'get',
-  })
+export function getUserInfo(data) {
+  return request({
+    headers: {
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+    url: '/userInfo',
+    method: 'post',
+    data,
+    })
 }
 
 // 更新头像
 export function changeAvator(data) {
-  return request1({
+  return request({
       headers: {
           "Content-Type": 'application/x-www-form-urlencoded'
       },
       url: '/changeavator',
+      method: 'post',
+      data
+  })
+}
+
+// 新增博客文件夹
+export function addBlogCategory(data) {
+  return request({
+      headers: {
+          "Content-Type": 'application/x-www-form-urlencoded'
+      },
+      url: '/addBlogCategory',
+      method: 'post',
+      data
+  })
+}
+
+// 关注
+export function toConcern(data) {
+  return request({
+      headers: {
+          "Content-Type":"application/x-www-form-urlencoded"
+      },
+      url: '/concern',
       method: 'post',
       data
   })

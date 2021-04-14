@@ -2,20 +2,20 @@
   <div id="content">
         <div class="top">
           <div v-for="(item, index) in type" :key="index" 
-          :class="{'active': activeIndex === index}" 
-          @click="changeIndex(index)">
-          {{item}}
-        </div>
+            :class="{'active': activeIndex === index}" 
+            @click="changeIndex(index)">
+            {{item}}
+          </div>
         </div>
         <Blog :blog="content.blog" v-show="activeIndex === 0"/>
         <Collect :collect="content.collect" v-show="activeIndex === 1"/>
-        <Fans :fans="content.fans" :concern="content.concern" v-show="activeIndex === 2"/>
+        <Concern :concern="content.concern" v-show="activeIndex === 2"/>
   </div>
 </template>
 
 <script>
 
-import Fans from './Fans'
+import Concern from './Concern'
 import Blog from './Blog'
 import Collect from './Collect' 
 
@@ -30,11 +30,11 @@ export default {
         content: {
             blog: {},
             collect: {},
-            fans: {}
+            concern: {}
         }
     },
     components: {
-        Fans,
+        Concern,
         Collect,
         Blog
     },
@@ -49,7 +49,7 @@ export default {
 <style scoped lang="less">
 #content {
     vertical-align: top;
-    width: 40%;
+    width: 50%;
     display: inline-block;
     position: relative;
     min-height: calc(100vh - 80px);

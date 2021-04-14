@@ -15,8 +15,8 @@
                     </div>
                 </div>
                 <!-- 只有查看自己的主页时，才显示取消收藏的按钮 -->
-                <div class="right" v-if="$route.params != $store.state.user.userId">
-                    <el-button round @click="cancelCollect(index,tag,item.title)">取消收藏</el-button>
+                <div class="right" v-if="$route.params.id == $store.state.token._id">
+                    <el-button round @click="handleCollect(index,item.blogId)">取消收藏</el-button>
                 </div>
             </div>
         </el-collapse-item>
@@ -26,7 +26,7 @@
 
 <script>
 
-import { cancelCollect } from 'network/collect'
+import { collectBlog } from 'network/blog'
 
 export default {
     props: {
@@ -38,16 +38,15 @@ export default {
         }
     },
     methods: {
-        async cancelCollect(index,tagName,title) {
-            const data = {
-                userId: this.$store.state.user.userId,
-                tagName,
-                title
-            }
-            await cancelCollect(data).then((res) => {
+        handleCollect(blogId) {
+            collectBlog({
+                _id: this.$store.state.token._id,
+                blogId,
+                collectFlag: true
+            }).then((res) => {
                 if(res.code === '0') {
-                    this.collect[tagName].splice(index,1)
-                    this.$message.success('取消收藏成功')
+                    // this.collect[tagName].splice(index,1)
+                    this.$message.success(res.data.msg)
                 }
             })
         }

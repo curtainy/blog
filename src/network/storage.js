@@ -3,9 +3,9 @@ export function setToken(token){
   localStorage.setItem("userId",JSON.stringify(token))
 }
 //更新头像
-export function updateToken(newHeadImg){
+export function updateToken(newAvatorUrl){
   const token = getToken()
-  token.headImg = newHeadImg
+  token.avatorUrl = newAvatorUrl
   removeToken()
   setToken(token)
 }

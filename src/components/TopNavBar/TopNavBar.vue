@@ -10,14 +10,15 @@
               <i slot="prefix" class="el-input__icon el-icon-search search-icon"></i>
             </el-input>
     </div>
-    <div class="admin" v-if="!$store.state.isLoad">
+    <div class="admin right" v-if="!$store.state.isLoad">
       <i class="el-icon-s-custom"></i>
       <span class="login" @click="loginBtn">登录/</span>
       <span @click="registerBtn">注册</span>
     </div>
-    <div class="load" v-if="$store.state.isLoad">
-      <img :src="$store.state.token.headImg" @click="handleClick">
+    <div class="load right" v-else>
+      <img :src="$store.state.token.avatorUrl" @click="handleClick">
       <div class="user">{{$store.state.token.username}}</div>
+      <el-badge :value="200" :max="99" class="msg"><span>消息</span></el-badge>
       <div class="quit" @click="quit">退出登录</div>
     </div>
   </div>
@@ -32,7 +33,7 @@ export default {
   data(){
     return {
       input: '',
-      navList: ['博客','创作','好友','个人中心'],
+      navList: ['博客','创作','闲聊','个人中心'],
       currentIndex: 0,
     }
   },
@@ -65,10 +66,10 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 #top-nav-bar{
   height: 50px;
+  min-width: 1600px;
   width: 100%;
   
   position: fixed;
@@ -83,10 +84,12 @@ export default {
   height: 100%;
 }
 .icon{
-  width: 200px;
+  width: 15%;
+  /* border: 1px solid #fff; */
 }
 .icon>img{
   height: 100%;
+  margin-left: 20px;
 }
 .icon>div{
   display: inline-block;
@@ -95,7 +98,12 @@ export default {
   position: relative; 
   top: -40%;
 }
-
+.right {
+  /* position: fixed;
+  right: 30px;
+  top: 0; */
+  float: right;
+}
 .search{
   width: 300px;
   margin: 0 30px;
@@ -106,6 +114,9 @@ export default {
 .admin{
   padding-top: 15px;
   margin-left: 100px;
+}
+.admin > span {
+  cursor: pointer;
 }
 .login{
   margin-left: 5px;
@@ -134,5 +145,18 @@ export default {
   top: -20px;
   margin-right: 10px;
   cursor: pointer;
+}
+.msg {
+  margin-top: 10px;
+  margin-right: 40px;
+  position: relative;
+  top: -27px;
+  cursor: pointer;
+}
+.msg > span {
+  /* font-size: 18px; */
+  font-size: 17px;
+  color: gainsboro;
+  padding: 5px;
 }
 </style>

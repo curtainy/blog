@@ -2,12 +2,12 @@
   <div class="blog_list">
     <div v-for="(item,index) in blogList" :key="index" class="list">
         <div class="test" v-show="!isShow">
-          <img :src="item.avatorUrl" class="bl_headImg">
+          <img :src="item.avatorUrl" class="bl_avatorUrl">
           <span class="bl_username">{{item.username}}</span>
         </div>
         <div class="list_item">
           <div class="bl_type">{{item.type}}</div>
-        <div class="bl_title" @click="toDetail(item.username,item.title)">{{item.title}}</div>
+        <div class="bl_title" @click="toDetail(item.blogId)">{{item.title}}</div>
         <div class="bl_text">{{item.content | articleText}}</div>
         <div class="bl_tag" v-for="(tag,index) in item.tag" :key="index">{{tag}}</div>
         <div class="bl_time">{{item.date | date}}</div> 
@@ -20,7 +20,7 @@
           <span>{{item.browse}}</span>
         </div> 
         <div class="action" v-show="isShow">
-          <span  v-if="!item.publish" class="pub" @click="handlePublish(item.username,item.title)">发布</span>
+          <span  v-if="!item.publish" class="pub" @click="handlePublish(item._id,item.title)">发布</span>
           <span class="edit" @click="handleModify(item.title)">编辑</span>
           <span class="cancel" @click="handleCancel(item.title)">删除</span>
         </div>
@@ -57,32 +57,26 @@ export default {
     }
   },
   methods: {
-    //编辑博客
-    handleModify(title){
-      this.$router.push('/modifyblog/'+ title)
-    },
-    //删除博客
-    handleCancel(title){
-      const bool = window.confirm('一旦删除不可恢复，确认删除吗？')
-      if(bool){
-        //告诉父组件要删除博客
-         console.log(title)
-        this.$emit('cancel',title)
-      }
-    },
-    //发布博客
-    handlePublish(username,title){
-      this.$emit('publish',username,title)
-    },
+    // //编辑博客
+    // handleModify(title){
+    //   this.$router.push('/modifyblog/'+ title)
+    // },
+    // //删除博客
+    // handleCancel(title){
+    //   const bool = window.confirm('一旦删除不可恢复，确认删除吗？')
+    //   if(bool){
+    //     //告诉父组件要删除博客
+    //      console.log(title)
+    //     this.$emit('cancel',title)
+    //   }
+    // },
+    // //发布博客
+    // handlePublish(username,title){
+    //   this.$emit('publish',username,title)
+    // },
     //跳转到详情页面
-    toDetail(username,title){
-      this.$router.push({
-        path: '/detailblog',
-        query: {
-          username,
-          title
-        }
-      })
+    toDetail(blogId){
+      this.$router.push('/blogdetail/' + blogId)
     }
   }
 }
@@ -106,7 +100,7 @@ export default {
    color: #409EFF;
    background: rgba(229,229,229,.5);
 }
-.bl_headImg{
+.bl_avatorUrl{
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -127,6 +121,7 @@ export default {
 .bl_title{
   font-size: 18px;
   margin: 5px 0 10px 10px;
+  cursor: pointer;
 }
 .bl_text{
   width: 100%;

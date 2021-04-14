@@ -41,7 +41,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+// import { mapGetters } from 'vuex'
 // import { modifyBlog } from 'network/blog'
 
 import { mavonEditor } from 'mavon-editor'
@@ -65,9 +65,9 @@ export default {
   components: {
     mavonEditor
   },
-  computed: {
-    ...mapGetters(['getMyBlog'])
-  },
+  // computed: {
+  //   ...mapGetters(['getMyBlog'])
+  // },
   mounted(){
     const title = this.$route.params.title
     const blog = this.getMyBlog.filter(elemnet => {
@@ -85,7 +85,7 @@ export default {
     createBlog(type){
       const blog = {
         username: this.$store.state.token.username,
-        headImg: this.$store.state.token.headImg,
+        avatorUrl: this.$store.state.token.avatorUrl,
         type: this.type,
         oldTitle: this.oldTitle,
         title: this.title,

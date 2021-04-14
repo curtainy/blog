@@ -7,10 +7,10 @@
                 <el-input v-model.number="ruleForm.account"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+                <el-input type="password" v-model="ruleForm.password"></el-input>
             </el-form-item>
             <el-form-item label="确认密码" prop="password2">
-                <el-input type="password" v-model="ruleForm.password2" autocomplete="off"></el-input>
+                <el-input type="password" v-model="ruleForm.password2"></el-input>
             </el-form-item>
             <el-form-item class="btn">
                 <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
@@ -36,7 +36,7 @@ export default {
             }
             setTimeout(() => {
                 if(!Number.isInteger(value)) {
-                    callback(new Error('请输入数字值'))
+                    callback(new Error('请输入11位手机号'))
                 } else if(value.toString().length != 11) {
                     callback(new Error('请输入11位手机号'))
                 } else {
@@ -86,7 +86,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['changeLoad']),
+        ...mapMutations(['load']),
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if(valid) {
@@ -94,11 +94,11 @@ export default {
                         role: 'user'
                     })).then((res) => {
                         if(res.code === '0') {
-                            this.changeLoad()
-                            this.getUserInfo(res.data)
+                            // this.getUserInfo(res.data)
                             this.$message.success('注册成功')
                             setToken(res.data) 
-                            this.$router.push('/home')
+                            this.load()
+                            this.$router.push('/article')
                         } else {
                             this.$message.error(res.msg)
                         }
@@ -139,7 +139,7 @@ export default {
 }
 .register>div{
     min-width: 500px;
-    margin-top: 15%;
+    // margin-top: 15%;
     width: 25%;
     padding: 40px;
     background: #fff;

@@ -5,19 +5,19 @@
             <el-menu-item index="0" class="login-item">免密登陆</el-menu-item>
             <el-menu-item index="1" class="login-item">密码登陆</el-menu-item>
         </el-menu>
-        <el-form :model="noPass" label-position="left" status-icon label-width="70px" class="demo-ruleForm no-pass" v-if="isPass">
+        <el-form :model="noPass" :rules="rules" label-position="left" status-icon label-width="70px" class="demo-ruleForm no-pass" v-if="isPass">
             <el-form-item label="账号" prop="account">
                 <el-input v-model.number="noPass.account"></el-input>
             </el-form-item>
             <el-form-item label="验证码" prop="verificationCode" class="code">
-                <el-input type="password" v-model.number="noPass.verificationCode" autocomplete="off"></el-input>
+                <el-input type="password" v-model.number="noPass.verificationCode"></el-input>
                 <el-button type="primary" :disabled="isSend" @click="getVerificationCode">{{buttonText}}</el-button>
             </el-form-item>
             <el-form-item class="btn">
                 <el-button type="primary" @click="loginNoPass">登陆</el-button>
             </el-form-item>
         </el-form>
-        <el-form :model="pass" label-position="left" status-icon label-width="70px" class="demo-ruleForm" v-else>
+        <el-form :model="pass" :rules="rules" label-position="left" status-icon label-width="70px" class="demo-ruleForm" v-else>
             <el-form-item label="账号" prop="account">
                 <el-input v-model.number="pass.account"></el-input>
             </el-form-item>
@@ -43,6 +43,20 @@ import { setToken } from 'network/storage'
 export default {
     name: 'login', 
     data() {
+        const checkAccount = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('账号不能为空'))
+            }
+            setTimeout(() => {
+                if(!Number.isInteger(value)) {
+                    callback(new Error('请输入11位手机号'))
+                } else if(value.toString().length != 11) {
+                    callback(new Error('请输入11位手机号'))
+                } else {
+                    callback()
+                }
+            },1000)
+        }
         return {
             activeIndex: '0',
             isPass: true,
@@ -56,10 +70,15 @@ export default {
                 account: '',
                 password: ''
             },
+            rules: {
+                account: [
+                    {validator: checkAccount, trigger: 'blur'}
+                ]
+            }
         }
     },
     methods: {
-        ...mapMutations(['changeLoad', 'getUserInfo']),
+        ...mapMutations(['load']),
         handleSelect(key) {
             if(key === '0') this.isPass = true
             else this.isPass = false
@@ -90,11 +109,11 @@ export default {
                 role: 'user'
             })).then((res) => {
                 if(res.code === '0') {
-                    this.changeLoad()
-                    this.getUserInfo(res.data)
+                    // this.getUserInfo(res.data)
                     this.$message.success('登陆成功')
                     setToken(res.data)
-                    this.$router.push('/home')
+                    this.load()
+                    this.$router.push('/article')
                 } else {
                     this.$message.success('账号或密码错误')
                 }
@@ -105,11 +124,12 @@ export default {
                 role: 'user'
             })).then((res) => {
                 if(res.code === '0') {
-                    this.changeLoad()
-                    this.getUserInfo(res.data)
+                    // this.changeLoad()
+                    // this.getUserInfo(res.data)
                     this.$message.success('登陆成功')
                     setToken(res.data)
-                    this.$router.push('/home')
+                    this.load()
+                    this.$router.push('/article')
                 } else {
                     this.$message.success('验证码错误')
                 }

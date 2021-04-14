@@ -17,10 +17,10 @@
             </template>
             <template v-else>
                 <el-form-item label="新密码" prop="password">
-                <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+                <el-input type="password" v-model="ruleForm.password"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="password2">
-                    <el-input type="password" v-model="ruleForm.password2" autocomplete="off"></el-input>
+                    <el-input type="password" v-model="ruleForm.password2"></el-input>
                 </el-form-item>
                 <el-form-item class="btn">
                     <el-button type="primary" @click="submitForm('ruleForm')">确认</el-button>
@@ -99,7 +99,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['changeLoad', 'getUserInfo']),
+        ...mapMutations(['load']),
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if(valid) {
@@ -107,11 +107,10 @@ export default {
                         role: 'user'
                     })).then((res) => {
                         if(res.code === '0') {
-                            this.changeLoad()
-                            this.getUserInfo(res.data)
                             this.$message.success('修改成功')
                             setToken(res.data)
-                            this.$router.push('/home')
+                            this.load()
+                            this.$router.push('/article')
                         }
                     })
                 }
@@ -178,7 +177,7 @@ export default {
     }
     &>div {
         min-width: 500px;
-        margin-top: 15%;
+        // margin-top: 15%;
         width: 25%;
         padding: 40px;
         background: #fff;

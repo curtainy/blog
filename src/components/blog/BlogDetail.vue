@@ -1,6 +1,7 @@
 <template>
+<!-- 没有用到 -->
   <div class="blog-detail">
-    <div class="blog-header">
+    <!-- <div class="blog-header">
       <el-avatar :size="45" :src="blog.avatorUrl" style="margin-right: 5px"></el-avatar>
       <div class="name">{{blog.nickName}}</div>
       <div class="time">{{blog.createTime}}</div>
@@ -8,7 +9,7 @@
       <el-button plain  size="small" class="to-fans" @click="cancelConcern(user.userId,user)" v-if="user.concern">取关</el-button>
       <el-button plain  size="small" class="to-fans" @click="handleConcern(user.userId,user)" v-else>关注</el-button>
     </div>
-    <div class="blog-content">{{blog.content}}</div>
+    <div class="blog-content">{{blog.content}}</div> -->
   </div>
 </template>
 

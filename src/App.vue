@@ -4,9 +4,10 @@
       <top-nav-bar/>
     <change-bg @changeBg="changeBg"/>
     <div class="article" :class="{day:isDay,dark:!isDay}">
-      <keep-alive :exclude="noCache">
+      <!-- <keep-alive :exclude="noCache"> -->
         <router-view/>
-      </keep-alive>
+      <!-- </keep-alive> -->
+      
     </div>
     </template>
     <template v-else>
@@ -34,7 +35,7 @@ export default {
   },
   computed: {
     getShow() {
-      return this.$route.path != '/login' && this.$route.path != '/register'
+      return this.$route.path != '/login' && this.$route.path != '/register' && this.$route.path != '/findpassword'
     }
   },
   methods: {
