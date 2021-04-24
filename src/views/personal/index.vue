@@ -33,7 +33,7 @@ export default {
         NoLoad
     },
     mounted() {
-        getUserInfo({_id: this.$route.params}).then((res) => {
+        getUserInfo({id: this.$route.params}).then((res) => {
             // console.log(res)
             if(res.code === '0') {
                 this.userInfo = res.data.userInfo

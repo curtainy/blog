@@ -30,7 +30,7 @@ export default {
         case 0: this.$router.push('/article'); break;
         case 1: this.$router.push('/creation'); break;
         case 2: this.$router.push('/chat'); break;
-        case 3: this.$router.push('/personal/' + this.$store.state.token._id);break;
+        case 3: this.$router.push('/personal/' + this.$store.state.token.id);break;
         default:
       }
     }

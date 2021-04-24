@@ -6,14 +6,14 @@
         <span>{{comment.username}}: </span>
         <span>{{comment.content}}</span>
         <span>{{comment.date | date}}</span>
-        <span @click="resComment(index1,comment.username, comment._id)" class="res">回复</span>
+        <span @click="resComment(index1,comment.username,comment.id, comment.commentId)" class="res">回复</span>
         <div v-for="(response,index2) in comment.response" 
              :key="index2" class="response_item">
           <img :src="response.avatorUrl">
           <span>{{response.username}}: </span>
           <span>{{response.content}}</span>
           <span>{{response.date | date}}</span>
-          <span @click="resComment(index1,response.username,response._id)" class="res">回复</span>
+          <span @click="resComment(index1,response.username,response.id,comment.commentId)" class="res">回复</span>
         </div>
     </div>
   </div>
@@ -39,12 +39,9 @@ export default {
   },
   methods: {
     //回复评论
-    resComment(index, username, id){
-      // const cnthead = '@'+ username + ' '
-      // console.log('---')
-      // console.log(index,cnthead)
+    resComment(index, username, tolderId, commentId){
       //给父组件传递要回复的评论所在索引和被回复人的昵称
-      this.$emit('resComment',index,username,id)
+      this.$emit('resComment',index,username,tolderId, commentId)
     },
   }
 }

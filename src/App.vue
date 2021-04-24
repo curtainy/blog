@@ -18,7 +18,7 @@
 
 <script>
 
-import TopNavBar from 'components/topNavBar/TopNavBar.vue'
+import TopNavBar from 'components/TopNavBar/TopNavBar.vue'
 import ChangeBg  from 'components/changeBg/ChangeBg.vue'
 
 export default {

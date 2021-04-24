@@ -1,14 +1,16 @@
 import request from './request'
+import qs from 'qs'
 
+const baseURL = '/edublog/user/'
 //注册
 export function register(data){
   return request({
     headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: '/register',
+    url: `${baseURL}register`,
     method: 'post',
-    data
+    data: qs.stringify(data)
   })
 }
 
@@ -16,11 +18,11 @@ export function register(data){
 export function login(data){
   return request({
     headers: {
-      "Content-Type":"application/x-www-form-urlencoded"
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: '/login',
+    url: `${baseURL}login`,
     method: 'post',
-    data
+    data: qs.stringify(data)
   })
 }
 
@@ -75,11 +77,14 @@ export function verificationCode(data) {
 }
 
 //获取个人中心信息(需要传入userId)
-export function getPersonalCenter() {
+export function getPersonalCenter(data) {
   return request({
-      url: '/personalCenter',
-      method: 'get',
-      // params: data
+    headers: {
+      "Content-Type":"application/x-www-form-urlencoded"
+    },
+      url: `${baseURL}userInfo`,
+      method: 'post',
+      data: qs.stringify(data)
   })
 }
 
@@ -137,8 +142,8 @@ export function toConcern(data) {
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
-      url: '/concern',
+      url: '/edublog/concern/concern',
       method: 'post',
-      data
+      data: qs.stringify(data)
   })
 }

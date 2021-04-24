@@ -84,7 +84,7 @@ export default {
   },
   async mounted() {
     // 获取当前用户的博客分类
-    await getBlogCategory({_id: this.$store.state.token._id}).then(res => {
+    await getBlogCategory({id: this.$store.state.token.id}).then(res => {
       if(res.code === '0') {
         this.categoryList = [...res.data.categoryList,'新增']
       }
@@ -108,7 +108,7 @@ export default {
   methods: {
     handlePublish(){
       publishBlog(Object.assign(this.blog, {
-        _id: this.$store.state.token._id,
+        id: this.$store.state.token.id,
         thumbs: 0,
         comment: [],
         browse: 0,
@@ -116,7 +116,7 @@ export default {
       })).then(res => {
         if(res.code === '0') {
           this.$message.success('发布成功')
-          this.$router.push('/blogdetail/' + this.$route.query.blogId)
+          this.$router.push('/blogdetail/' + res.data.blogId)
         }
       })
     },
