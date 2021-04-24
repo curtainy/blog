@@ -12,9 +12,9 @@
               <el-avatar :size="60" :src="user.avatorUrl"></el-avatar>
               <div class="user-name">{{user.username}}</div>
               <div class="user-msg">{{user.introduce}}</div>
-              <el-button round class="btn" @click="handleConcern(user.id)" v-if="showCancelConcern">取关</el-button>
-              <!-- <el-button round class="btn" @click="cancelConcern(user.id,user)" v-if="user.concern">取关</el-button> -->
-              <!-- <el-button round class="btn" @click="handleConcern(user.id,user)" v-else>关注</el-button> -->
+              <el-button round class="btn" @click="handleConcern(user._id)" v-if="showCancelConcern">取关</el-button>
+              <!-- <el-button round class="btn" @click="cancelConcern(user._id,user)" v-if="user.concern">取关</el-button> -->
+              <!-- <el-button round class="btn" @click="handleConcern(user._id,user)" v-else>关注</el-button> -->
           </div>
       </div>
   </div>
@@ -42,14 +42,14 @@ export default {
         // }
         showCancelConcern() {
             const nowId = this.$route.params.id
-            if(this.$store.state.token.id == nowId) return true
+            if(this.$store.state.token._id == nowId) return true
             else return false
         }
     },
     methods: {
         handleConcern(userId,user) {
             toConcern({
-                id: this.$store.state.token.id,
+                _id: this.$store.state.token._id,
                 fansId: userId,
                 concernFlag: true
             }).then((res) => {

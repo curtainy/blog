@@ -33,7 +33,7 @@
                 <div>{{comment.content}}</div>
                 <div class="bottom">
                     <span>{{comment.date}}</span>
-                    <span @click="toResponse(index,comment.username,comment.id)"><i class="el-icon-chat-line-round"></i> 回复</span>
+                    <span @click="toResponse(index,comment.username,comment._id)"><i class="el-icon-chat-line-round"></i> 回复</span>
                 </div>
                 <div v-for="(response, index1) in comment.response" :key="index1" class="response">
                      <img :src="response.avatorUrl" class="user-img" style="vertical-align: middle;margin-right: 10px"/>
@@ -42,7 +42,7 @@
                         <div>{{response.content}}</div>
                         <div class="response-bottom bottom">
                             <span>{{response.date}}</span>
-                            <span @click="toResponse(index, response.username,response.id)"><i class="el-icon-chat-line-round"></i> 回复</span>
+                            <span @click="toResponse(index, response.username,response._id)"><i class="el-icon-chat-line-round"></i> 回复</span>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@ export default {
                 date: new Date().getTime(),
                 type: this.type,
                 index: this.commentIndex,
-                tolderId: this.type === 0 ? this.chat.id : this.tolderId,
+                tolderId: this.type === 0 ? this.chat._id : this.tolderId,
                 response: []
             })
             topicComment(data).then(res => {
@@ -117,12 +117,12 @@ export default {
        // 举报
        handleReoprt() {
            report({
-               id: this.$store.state.token.id,
+               _id: this.$store.state.token._id,
                reportReason: this.reportReason,
                date: new Date().getTime(),
                type: 'topic',
             //    id: 话题对应的id
-               reportedId: this.chat.id // 被举报人的id
+               reportedId: this.chat._id // 被举报人的id
            }).then(res => {
                if(res.code === '0') {
                     this.$message.success('已提交举报')

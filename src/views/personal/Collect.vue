@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <!-- 只有查看自己的主页时，才显示取消收藏的按钮 -->
-                <div class="right" v-if="$route.params.id == $store.state.token.id">
+                <div class="right" v-if="$route.params.id == $store.state.token._id">
                     <el-button round @click="handleCollect(index,item.blogId)">取消收藏</el-button>
                 </div>
             </div>
@@ -40,7 +40,7 @@ export default {
     methods: {
         handleCollect(blogId) {
             collectBlog({
-                id: this.$store.state.token.id,
+                _id: this.$store.state.token._id,
                 blogId,
                 collectFlag: true
             }).then((res) => {

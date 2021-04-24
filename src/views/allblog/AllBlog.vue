@@ -32,12 +32,9 @@ export default {
   },
   methods: {
     getBlogList() {
-      const data = {
-        tag: this.categoryList[this.activeIndex]
-      }
-      allBlog(data).then((res) => {
+      allBlog({type: this.categoryList[this.activeIndex]}).then((res) => {
         if(res.code === '0') {
-          this.blogList = res.data.blog
+          this.blogList = res.data.blogList
         }
       })
     },

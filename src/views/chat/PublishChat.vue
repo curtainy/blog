@@ -69,7 +69,7 @@ export default {
             this.topic = command
         },
         publishTopic() {
-            publishTopic({id: this.$store.state.token.id ,content: this.textarea, topic: this.topic}).then(res => {
+            publishTopic({_id: this.$store.state.token._id ,content: this.textarea, topic: this.topic}).then(res => {
                 if(res.code == '0') {
                     this.$message.success('发表成功')
                     this.textarea = ''

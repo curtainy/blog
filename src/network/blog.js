@@ -1,29 +1,59 @@
 import request from './request'
-import qs from 'qs'
 
-const baseURL = '/edublog/blogs/'
+//写博客
+// export function addBlog(blog){
+//   return request({
+//     headers: {
+//       "Content-Type":"application/x-www-form-urlencoded"
+//     },
+//     url: '/addBlog',
+//     method: 'post',
+//     data: blog
+//   })
+// }
+
+// 删除博客
+// export function cancelBlog(data){
+//   return request1({
+//     url: '/cancelblog',
+//     method: 'get',
+//     params: data
+//   })
+// }
+
+//修改博客
+// export function modifyBlog(blog){
+//   return request({
+//     headers: {
+//       "Content-Type":"application/x-www-form-urlencoded"
+//     },
+//     url: '/modifyblog',
+//     method: 'post',
+//     data: blog
+//   })
+// }
 
 //获取博客列表
 export function allBlog(data){
   return request({
-    headers : {
-      'Content-type': 'application/x-www-form-urlencoded' 
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: `${baseURL}allBlog`,
+    url: '/allblog',
     method: 'post',
-    data: qs.stringify(data)
+    data
   })
 }
 
 // 获取博客详情
 export function blogDetail(data) {
   return request({
-    headers : {
-      'Content-type': 'application/x-www-form-urlencoded' 
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    url: `${baseURL}blogDetail`,
+    url: '/edublog/blogs/blogDetail',
     method: 'post',
-    data: qs.stringify(data)
+    data
   })
 }
 
@@ -32,9 +62,9 @@ export function blogDetail(data) {
 export function publishComment(data){
   return request({
     headers: {
-      'Content-type': 'application/json' 
+      'Content-type': 'application/x-www-form-urlencoded' 
     },
-    url: `${baseURL}publishComment`,
+    url: '/publishComment',
     method: 'post',
     data
   })
@@ -46,9 +76,9 @@ export function getBlogCategory(data) {
     headers: {
       'Content-type': 'application/x-www-form-urlencoded' 
     },
-    url: `${baseURL}blogCategory`,
+    url: '/blogCategory',
     method: 'post',
-    data: qs.stringify(data)
+    data
   })
 } 
 
@@ -76,12 +106,12 @@ export function cancelBlog(data) {
 // 发布博客
 export function publishBlog(data) {
   return request({
-    headers: {
-      'Content-type': 'application/json' 
-    },
-    url: `${baseURL}publishBlog`,
-    method: 'post',
-    data
+      headers: {
+          "Content-Type":"application/x-www-form-urlencoded"
+      },
+      url: '/publishBlog',
+      method: 'post',
+      data
   })
 }
 
@@ -92,8 +122,8 @@ export function collectBlog(data) {
       headers: {
           "Content-Type":"application/x-www-form-urlencoded"
       },
-      url: '/edublog/collect/collectBlog',
+      url: '/collectBlog',
       method: 'post',
-      data: qs.stringify(data)
+      data
   })
 }

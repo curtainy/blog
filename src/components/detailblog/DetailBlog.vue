@@ -12,8 +12,8 @@
     </div>
     <div v-highlight v-html="content"></div> 
     <div class="operate">
-      <div @click="handleThumb" :class="{checked: thumbed, nocheck: !thumbed}"><i class="el-icon-thumb"></i> 点赞</div>
-      <div @click.stop="handleCollect" :class="{checked: collected,nocheck: !collected}"><i class="el-icon-star-off"></i> 收藏</div>
+      <div @click="handleThumb" :class="{'checked': thumbed}"><i class="el-icon-thumb"></i> 点赞</div>
+      <div @click.stop="handleCollect" :class="{'checked': collected}"><i class="el-icon-star-off"></i> 收藏</div>
       <div @click="dialogVisible=true" :class="{'checked': reported}"><i class="el-icon-warning-outline"></i> 举报</div>
     </div>
     <div class="db_comment">
@@ -53,16 +53,18 @@ export default {
       content: '',
       commentContent: '',
       type: 0,   //0 发表   1 评论
-      resIndex: -1,
       tolderId: '', // 被回复的人
-      commentId: null,
+      resIndex: ''//被回复评论的索引
     }
   },
   components:{
     CommentList
   },
-  mounted() {
-    this.getBlogDetail()
+  async mounted() {
+    await blogDetail({blogId: this.$route.params.blogId}).then(res => {
+      if(res.code === '0') this.blog = res.data
+    })
+    this.content = marked(this.blog.content)
   },
   computed: {
     getLength(){
@@ -75,15 +77,8 @@ export default {
     }
   },
   methods: {
-    // 获取博客详情
-    async getBlogDetail() {
-      await blogDetail({blogId: this.$route.params.blogId}).then(res => {
-        if(res.code === '0') this.blog = res.data
-      })
-      this.content = marked(this.blog.content)
-    },
     //发表评论
-    async sendComment(){
+    sendComment(){
       if(!this.$store.state.isLoad){//还未登录
         this.$message.error('登录后才能进行评论哦')
       }else{ 
@@ -91,17 +86,15 @@ export default {
         const data = Object.assign(this.$store.state.token, {
           content: this.commentContent,  // 评论内容
           date: new Date().getTime(), // 时间
+          index: this.resIndex, // 被回复的索引
           type: this.type, // 类型
-          blogId: this.blog.blogId,
-          commentId: this.commentId,
-          tolderId: this.type === 0 ? this.blog.id : this.tolderId // 被回复人的id
+          tolder: this.type === 0 ? this.blog._id : this.tolderId // 被回复人的id
         })
         publishComment(data).then(res => {
           if(res.code === '0') {
             this.$message.success('评论成功')
-            // if(this.type == 0) this.blog.comment.push(data)
-            // else this.blog.comment[this.resIndex].response.push(data)
-            this.getBlogDetail()
+            if(this.type == 0) this.blog.comment.push(data)
+            else this.blog.comment[this.resIndex].response.push(data)
             this.commentContent = ''
             this.type = 0
           }
@@ -109,22 +102,21 @@ export default {
       }
     },
     //回复评论
-    resComment(index,username,tolderId,commentId){
+    resComment(index,username,id){
       this.commentContent = '@'+ username
       this.resIndex = index
       this.type = 1
-      this.tolderId = tolderId
-      this.commentId = commentId
+      this.tolderId = id
     },
     // 举报
     handleReoprt() {
       report({
-         id: this.$store.state.token.id,
+         _id: this.$store.state.token._id,
         reportReason: this.reportReason,
         date: new Date().getTime(),
         type: 'blog',
         //    id: 话题对应的id
-        reportedId: this.blog.id // 被举报人的id
+        reportedId: this.blog._id // 被举报人的id
       }).then(res => {
         if(res.code === '0') {
           this.$message.success('已提交举报')
@@ -138,8 +130,7 @@ export default {
     handleThumb() {
       thumb({
         //    id: 话题对应id
-        id: this.$store.state.token.id,
-        blogId: this.blog.blogId,
+        id: 1,
         type: 'blog',
         thumbFlag: this.thumbed
         }).then(res => { 
@@ -151,7 +142,7 @@ export default {
     // 收藏
     handleCollect() {
       collectBlog({
-        id: this.$store.state.token.id,
+        _id: this.$store.state.token._id,
         blogId: this.blog.blogId,
         collectFlag: this.collected
       }).then(res => {
@@ -243,15 +234,12 @@ textarea::-webkit-input-placeholder { /* WebKit browsers 适配谷歌 */
     padding: 20px;
     font-size: 14px;
   }
-  // & > div:hover {
-  //   cursor: pointer;
-  //   color: #589ef8 !important; 
-  // }
-  .checked {
+  & > div:hover {
+    cursor: pointer;
     color: #589ef8; 
   }
-  .nocheck {
-    color: black;
+  .checked {
+    color: #589ef8; 
   }
 }
 </style>

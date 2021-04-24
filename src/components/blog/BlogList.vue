@@ -9,7 +9,7 @@
                 <div class="blog-content">{{blog.content}}</div>
                 <div class="other">
                     <span>{{blog.date}}</span>
-                    <div class="btn" v-show="$route.params.id == $store.state.token.id">
+                    <div class="btn" v-show="$route.params.id == $store.state.token._id">
                         <span @click="edit(blog.blogId)">编辑</span>
                         <span @click="cancel(index,blog.blogId)">删除</span>
                     </div>
@@ -42,7 +42,7 @@ export default {
     // 删除博客
     cancel(index,blogId) {
       cancelBlog({
-        id: this.$store.state.token.id,
+        _id: this.$store.state.token._id,
         blogId
       }).then(res => {
         if(res.code === '0') {
