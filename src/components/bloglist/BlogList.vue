@@ -20,7 +20,7 @@
           <span>{{item.browse}}</span>
         </div> 
         <div class="action" v-show="isShow">
-          <span  v-if="!item.publish" class="pub" @click="handlePublish(item._id,item.title)">发布</span>
+          <span  v-if="!item.publish" class="pub" @click="handlePublish(item.id,item.title)">发布</span>
           <span class="edit" @click="handleModify(item.title)">编辑</span>
           <span class="cancel" @click="handleCancel(item.title)">删除</span>
         </div>

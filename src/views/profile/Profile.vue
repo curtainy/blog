@@ -10,8 +10,8 @@
         <div class="pro_msg">
           <div class="msg_top">
              <div>账号：{{userInfo.account}}</div>
-             <div>已发表博客：{{userInfo.blogs}}</div>
-             <div>收藏博客数：{{userInfo.collects}}</div>
+             <div>已发表博客：{{userInfo.blogNum}}</div>
+             <div>收藏博客数：{{userInfo.collectNum}}</div>
           </div>
           <div class="info base">
           <div class="title">基本信息</div>
@@ -146,7 +146,7 @@ export default {
     ...mapGetters(['getMyBlog'])
   },
   async mounted() {
-        await getPersonalCenter({_id: this.$store.state.token._id}).then((res) => {
+        await getPersonalCenter({id: this.$store.state.token.id}).then((res) => {
             if(res.code === '0') {
                 this.userInfo = res.data
             }
@@ -174,7 +174,7 @@ export default {
     getImgUrl(url){
       this.userInfo.avatorUrl = url
       //更新数据库中信息
-      changeAvator({_id: this.$store.state.token._id,newAvatorUrl:url})
+      changeAvator({id: this.$store.state.token.id,newAvatorUrl:url})
       .then(data => {
         if(data.code === 0){
           //...

@@ -45,7 +45,7 @@ export default {
         },
         getTopicContentList() {
           let data = {topic: this.topicList[this.activeIndex]}
-          if(this.activeIndex === 1) data._id = this.$store.state.token._id
+          if(this.activeIndex === 1) data.id = this.$store.state.token.id
           topicContentList(data).then(res => {
             if(res.code == '0') {
               this.topicContentList = res.data.topicContentList
